@@ -1,0 +1,397 @@
+.wrap {
+	border-radius: 30px;
+	background: $back;
+}
+
+#class {
+	margin-bottom: 120px;
+	font-size: 20px;
+
+	&.memory {
+		overflow: visible;
+	}
+
+	.wrap {
+		padding: 117px 102px 0px 102px;
+
+		&.trial_lesson {
+			padding: 62px 102px 0px 102px;
+		}
+	}
+
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 20px;
+	}
+
+	&.reading-by-algorithm .row, &.memory .row {
+		align-items: flex-start;
+	}
+
+	h1 {
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 40px;
+		line-height: 49px;
+	}
+
+	&.memory h1 {
+		max-width: 500px;
+	}
+
+	.trial_lesson-form {
+		text-align: center;
+
+		h1 {
+			display: inline-block;
+			font-weight: 600;
+			font-size: 50px;
+			line-height: 61px;
+			text-align: center;
+			margin-bottom: 28px;
+		}
+
+		&.trial-1 h1 {
+			max-width: 725px;
+		}
+	}
+}
+
+@media (max-width: 1250px) {
+	#class {
+		margin-bottom: 50px;
+
+		.wrap {
+			padding: 50px 20px 4px 20px;
+
+			&.trial_lesson {
+				padding: 50px 20px 4px 20px;
+			}
+		}
+
+		.row {
+			justify-content: center;
+		}
+
+		h1 {
+			margin-bottom: 20px;
+		}
+
+		&.memory h1 {
+			text-align: center;
+		}
+
+		.trial_lesson-form {
+			h1 {
+				font-size: 40px;
+				line-height: 50px;
+				margin-bottom: 20px;
+			}
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#class {
+		margin-bottom: 50px;
+		font-size: 16px;
+
+		.wrap {
+			padding: 20px 5px 4px 5px;
+
+			&.trial_lesson {
+				padding: 20px 5px 4px 5px;
+			}
+		}
+
+		h1 {
+			margin-bottom: 10px;
+			font-size: 35px;
+			line-height: 44px;
+		}
+
+		.trial_lesson-form {
+			h1 {
+				font-size: 25px;
+				line-height: 30px;
+				margin-bottom: 10px;
+			}
+		}
+	}
+}
+
+// ----------------------------- Форма ----------------------------
+#form {
+	width: 515px;
+	height: 221px;
+	position: relative;
+
+	&.yellow {
+		background: url(/img/courses/form_yellow.png) no-repeat center center / contain;
+	}
+
+	&.violet {
+		background: url(/img/courses/form_violet.png) no-repeat center center / contain;
+	}
+
+	&.green {
+		background: url(/img/courses/form_green.png) no-repeat center center / contain;
+	}
+
+	&.blue {
+		background: url(/img/courses/form_blue.png) no-repeat center center / contain;
+	}
+
+	input {
+		width: 167px;
+		box-sizing: border-box;
+		padding: 5px;
+		font-family: $default-font, sans-serif;
+		font-weight: 400;
+		font-size: 20px;
+		line-height: 1;
+		border: none;
+		vertical-align: middle;
+		position: absolute;
+		right: 54px;
+		text-align: center;
+		background: transparent;
+
+		&::placeholder {
+			color: $font;
+		}
+	}
+
+	.name {
+		top: 70px;
+	}
+
+	.surname {
+		top: 110px;
+	}
+
+	.res {
+		display: none;
+	}
+}
+
+@media (max-width: 650px) {
+	#form {
+		width: 100%;
+		height: auto;
+		border-radius: 10px;
+		padding: 10px 0;
+
+		&.yellow, &.violet, &.green {
+			background: #D9D9D9;
+		}
+
+		input {
+			width: 100%;
+			font-size: 20px;
+			position: relative;
+			right: 0;
+			margin: 0;
+
+			&::placeholder {
+				color: $font;
+			}
+		}
+
+		.name {
+			margin-bottom: 5px;
+			top: 0;
+		}
+
+		.surname {
+			top: 0;
+		}
+	}
+}
+
+.trial_lesson-form {
+	&.trial-1 {
+		height: 870px;
+		background: url(/img/courses/trial_1.png) no-repeat center bottom / contain;
+	}
+
+	&.trial-2 {
+		height: 760px;
+		margin-bottom: 41px;
+		background: url(/img/courses/trial_2.png) no-repeat center bottom / contain;
+	}
+
+	#form {
+		width: 100%;
+		height: 40px;
+
+		&.yellow {
+			background: none;
+
+			input {
+				border: 1px solid $assent_yellow;
+			}
+		}
+
+		&.violet {
+			background: none;
+
+			input {
+				border: 1px solid $assent_violet;
+			}
+		}
+
+		&.green {
+			background: none;
+
+			input {
+				border: 1px solid $assent_green;
+			}
+		}
+
+		input {
+			width: 200px;
+			box-sizing: border-box;
+			padding: 0 5px;
+			height: 40px;
+			line-height: 40px;
+			border: none;
+			position: relative;
+			right: 0;
+			text-align: center;
+			background: $back;
+			border-radius: 5px;
+			margin: 0 16px;
+
+			&::placeholder {
+				color: $font;
+			}
+		}
+
+		.name, .surname {
+			top: 0;
+		}
+	}
+}
+
+@media (max-width: 1250px) {
+	.trial_lesson-form {
+		&.trial-1 {
+			height: 550px;
+		}
+
+		&.trial-2 {
+			height: 500px;
+			margin-bottom: 20px;
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	.trial_lesson-form {
+		&.trial-1, &.trial-2 {
+			height: auto;
+			background: none;
+			margin-bottom: 0;
+		}
+
+		#form {
+			height: auto;
+
+			input {
+				width: 100%;
+				margin: 0;
+				margin-bottom: 10px;
+			}
+
+			.name, .surname {
+				top: 0;
+			}
+		}
+	}
+}
+
+// --------------------------- Тест ---------------------------
+
+.test {
+	padding: 0;
+	margin-bottom: 100px;
+
+	&:last-child {
+		margin-bottom: 40px;
+	}
+}
+
+@media (max-width: 1250px) {
+	.test {
+		padding: 0;
+		margin-bottom: 70px;
+
+		&:last-child {
+			margin-bottom: 30px;
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	.test {
+		padding: 0;
+		margin-bottom: 50px;
+
+		&:last-child {
+			margin-bottom: 10px;
+		}
+	}
+}
+
+.course_img {
+	text-align: center;
+	margin-bottom: -5px;
+}
+
+.memory {
+	.course_img {
+		margin-bottom: -68px;
+	}
+}
+
+@media (max-width: 1250px) {
+	.course_img {
+		img {
+			width: 90%;
+		}
+	}
+
+	.reading-by-algorithm {
+		.course_img {
+			img {
+				max-width: 400px;
+			}
+		}
+	}
+
+	.memory {
+		.course_img {
+			margin-bottom: -63px;
+
+			img {
+				max-width: 400px;
+			}
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	.memory {
+		.course_img {
+			margin-bottom: -43px;
+
+			img {
+				max-width: 250px;
+			}
+		}
+	}
+}

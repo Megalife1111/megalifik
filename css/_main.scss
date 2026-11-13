@@ -1,0 +1,752 @@
+#main {
+	padding-top: 40px;
+	text-align: center;
+
+	h1 {
+		width: 100%;
+		font-family: 'Montserrat Alternates';
+		font-weight: 500;
+		font-size: 50px;
+		line-height: 61px;
+		text-align: center;
+		letter-spacing: 0.03em;
+		margin-top: 45px;
+		margin-bottom: -105px;
+		z-index: 10;
+		position: relative;
+	}
+
+	.available_courses {
+		display: block;
+		max-width: 782px;
+		width: 100%;
+		margin-bottom: 5px;
+		z-index: 5;
+		position: relative;
+	}
+
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin: 0 -12px;
+	}
+
+	.col {
+		width: 20%;
+		margin-bottom: 91px;
+	}
+
+	.page, .page:active, .page:hover, .page:focus, .plug {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 28px;
+		line-height: 33px;
+		letter-spacing: 0.03em;
+		margin: 0 12px;
+		padding: 7px;
+		height: 170px;
+		background: linear-gradient(90deg, rgba(89, 235, 155, 0.5) 0%, rgba(89, 235, 155, 0) 100%);
+		border: 1px solid rgba(89, 235, 155, 0.4);
+		filter: drop-shadow(4px 4px 16px rgba(0, 0, 0, 0.2));
+		border-radius: 20px;
+
+		img {
+			width: 85%;
+		}
+	}
+}
+
+@media (max-width: 1250px) {
+	#main {
+		padding-top: 20px;
+
+		h1 {
+			font-size: 40px;
+			line-height: 50px;
+			margin-top: 25px;
+			margin-bottom: -95px;
+		}
+
+		.row {
+			margin: 0 -10px;
+		}
+
+		.col {
+			width: 33.33333%;
+			margin-bottom: 50px;
+		}
+
+		.page, .page:active, .page:hover, .page:focus, .plug {
+			font-size: 25px;
+			line-height: 30px;
+			margin: 0 10px;
+			padding: 5px;
+			height: 150px;
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#main {
+		h1 {
+			font-size: 23px;
+			line-height: 30px;
+			margin-top: 25px;
+			margin-bottom: -35px;
+		}
+
+		.available_courses {
+			width: 280px;
+		}
+
+		.row {
+			margin: 0 -5px;
+		}
+
+		.col {
+			width: 50%;
+			margin-bottom: 30px;
+		}
+
+		.page, .page:active, .page:hover, .page:focus {
+			font-size: 18px;
+			line-height: 25px;
+			margin: 0 5px;
+			height: 120px;
+		}
+
+		.plug {
+			display: none;
+		}
+	}
+}
+
+// ------------------------- домашние задания ---------------------------
+#main-homework {
+	margin-top: 51px;
+	margin-bottom: 120px;
+
+	h1 {
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 60px;
+		line-height: 73px;
+		letter-spacing: 0.03em;
+		margin-left: 137px;
+	}
+
+	.wrap {
+		height: 668px;
+		width: 1164px;
+		margin-left: 9px;
+		background: url(/img/main/homework.png) no-repeat center bottom / contain;
+		position: relative;
+	}
+
+	.page {
+		font-weight: 700;
+		font-size: 50px;
+		line-height: 59px;
+		letter-spacing: 0.03em;
+		display: block;
+		position: absolute;
+		width: 330px;
+		text-align: center;
+		left: 300px;
+
+		&:nth-child(1) {
+			top: 308px;
+		}
+
+		&:nth-child(2) {
+			top: 397px;
+		}
+	}
+}
+
+@media (max-width: 1250px) {
+	#main-homework {
+		margin-top: 20px;
+		margin-bottom: 50px;
+
+		h1 {
+			font-size: 40px;
+			line-height: 50px;
+			margin-left: 30px;
+		}
+
+		.wrap {
+			height: 350px;
+			width: 100%;
+			margin-left: 0;
+		}
+
+		.page {
+			font-size: 25px;
+			line-height: 30px;
+			width: 178px;
+			left: 162px;
+
+			&:nth-child(1) {
+				top: 155px;
+			}
+
+			&:nth-child(2) {
+				top: 205px;
+			}
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#main-homework {
+		margin-top: 10px;
+		margin-bottom: 20px;
+
+		h1 {
+			font-size: 30px;
+			line-height: 35px;
+			margin-left: 0;
+			width: 100%;
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.wrap {
+			height: auto;
+			background: none;
+		}
+
+		.page {
+			position: relative;
+			font-size: 20px;
+			line-height: 25px;
+			width: auto;
+			left: 0;
+			margin-bottom: 10px;
+
+			&:nth-child(1), &:nth-child(2) {
+				top: 0;
+			}
+		}
+	}
+}
+
+// -------------------------------- занятия по английскому -------------------------
+#main-english {
+	margin-top: 8px;
+	margin-bottom: 113px;
+
+	h1 {
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 46px;
+		line-height: 56px;
+		letter-spacing: 0.03em;
+		margin-left: 230px;
+	}
+
+	.wrap {
+		height: 902px;
+		width: 1230px;
+		margin-left: -30px;
+		background: url(/img/main/english.png) no-repeat center bottom / contain;
+		position: relative;
+	}
+
+	.page {
+		font-weight: 700;
+		font-size: 50px;
+		line-height: 59px;
+		letter-spacing: 0.03em;
+		display: block;
+		position: absolute;
+		width: 714px;
+		text-align: center;
+		left: 117px;
+		text-transform: uppercase;
+		color: $back;
+
+		&:nth-child(1) {
+			top: 298px;
+		}
+
+		&:nth-child(2) {
+			top: 412px;
+		}
+	}
+}
+
+@media (max-width: 1250px) {
+	#main-english {
+		margin-bottom: 50px;
+
+		h1 {
+			font-size: 30px;
+			line-height: 40px;
+			margin-left: 70px;
+		}
+
+		.wrap {
+			height: 480px;
+			width: 100%;
+			margin-left: 0;
+		}
+
+		.page {
+			font-size: 25px;
+			line-height: 30px;
+			width: 366px;
+			left: 60px;
+
+			&:nth-child(1) {
+				top: 160px;
+			}
+
+			&:nth-child(2) {
+				top: 235px;
+			}
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#main-english {
+		margin-top: 10px;
+		margin-bottom: 20px;
+
+		h1 {
+			font-size: 30px;
+			line-height: 35px;
+			margin-left: 0;
+			width: 100%;
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.wrap {
+			height: auto;
+			background: none;
+		}
+
+		.page {
+			position: relative;
+			font-size: 20px;
+			line-height: 25px;
+			width: auto;
+			left: 0;
+			margin-bottom: 10px;
+			color: $font;
+
+			&:nth-child(1), &:nth-child(2) {
+				top: 0;
+			}
+		}
+	}
+}
+
+// ---------------------- проверка скорости чтения -------------------------
+#main-reading {
+	.wrap {
+		padding: 62px 20px 0px 20px;
+		text-align: center;
+	}
+
+	h1 {
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 50px;
+		line-height: 61px;
+		margin-bottom: 90px;
+	}
+
+	.page {
+		display: inline-block;
+		width: 800px;
+		height: 70px;
+		background: linear-gradient(180deg, rgba(252, 221, 17, 0.7) 0%, rgba(252, 221, 17, 0.2) 100%);
+		border-radius: 30px;
+		line-height: 70px;
+		font-weight: 500;
+		font-size: 26px;
+		letter-spacing: 0.03em;
+		margin-bottom: 22px;
+	}
+
+	img {
+		margin-top: 77px;
+		margin-bottom: -6px;
+	}
+}
+
+@media (max-width: 1250px) {
+	#main-reading {
+		.wrap {
+			padding: 30px 10px 0px 10px;
+		}
+
+		h1 {
+			font-size: 35px;
+			line-height: 45px;
+			margin-bottom: 50px;
+		}
+
+		.page {
+			width: 100%;
+			height: 50px;
+			line-height: 50px;
+			font-size: 20px;
+			margin-bottom: 20px;
+		}
+
+		img {
+			margin-top: 50px;
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#main-reading {
+		h1 {
+			font-size: 25px;
+			line-height: 35px;
+			margin-bottom: 30px;
+		}
+
+		.page {
+			width: 100%;
+			height: auto;
+			line-height: 1.6;
+			font-size: 16px;
+			padding: 10px;
+			margin-bottom: 15px;
+		}
+
+		img {
+			width: 90%;
+			margin-top: 30px;
+		}
+	}
+}
+
+// -------------------------- найти соответствие -----------------------------
+#main-conformity {
+	.wrap {
+		padding: 72px 63px 6px 63px;
+		text-align: center;
+	}
+
+	h1 {
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 50px;
+		line-height: 61px;
+		margin-bottom: 70px;
+	}
+
+	.menu {
+		display: block;
+		height: 660px;
+		width: 100%;
+		background: url(/img/main/conformity.png) no-repeat center center / contain;
+		position: relative;
+	}
+
+	.page {
+		font-weight: 400;
+		font-size: 40px;
+		line-height: 47px;
+		letter-spacing: 0.03em;
+		width: 322px;
+		display: block;
+		position: absolute;
+		left: 325px;
+		text-align: left;
+		padding-left: 35px;
+
+		&:nth-child(1) {
+			top: 150px;
+		}
+
+		&:nth-child(2) {
+			top: 222px;
+		}
+
+		&:nth-child(3) {
+			top: 294px;
+		}
+	}
+}
+
+@media (max-width: 1250px) {
+	#main-conformity {
+		.wrap {
+			padding: 50px 10px 6px 10px;
+		}
+
+		h1 {
+			font-size: 40px;
+			line-height: 50px;
+			margin-bottom: 20px;
+		}
+
+		.menu {
+			height: 400px;
+		}
+
+		.page {
+			font-size: 25px;
+			line-height: 30px;
+			width: 175px;
+			left: 178px;
+			padding-left: 10px;
+
+			&:nth-child(1) {
+				top: 95px;
+			}
+
+			&:nth-child(2) {
+				top: 137px;
+			}
+
+			&:nth-child(3) {
+				top: 180px;
+			}
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#main-conformity {
+		.wrap {
+			padding: 30px 10px 6px 10px;
+		}
+
+		h1 {
+			font-size: 30px;
+			line-height: 40px;
+			margin-bottom: 20px;
+		}
+
+		.menu {
+			height: auto;
+			background: none;
+		}
+
+		.page {
+			position: relative;
+			font-size: 25px;
+			line-height: 30px;
+			width: auto;
+			left: 0;
+			margin-bottom: 10px;
+			padding-left: 0;
+			text-align: center;
+
+			&:nth-child(1), &:nth-child(2), &:nth-child(3) {
+				top: 0;
+			}
+		}
+	}
+}
+
+// -------------------------------- Тексты ----------------------------------
+#main-texts {
+	.wrap {
+		padding: 114px 315px 455px 315px;
+		position: relative;
+		margin-bottom: 100px;
+	}
+
+	h1 {
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 70px;
+		line-height: 85px;
+		letter-spacing: 0.04em;
+	}
+
+	.page {
+		position: absolute;
+		font-weight: 500;
+		font-size: 50px;
+		line-height: 59px;
+		letter-spacing: 0.03em;
+		left: 421px;
+		bottom: 220px;
+		cursor: pointer;
+		z-index: 20;
+	}
+
+	img {
+		position: absolute;
+		left: 254px;
+		bottom: 0;
+		z-index: 10;
+	}
+}
+
+@media (max-width: 1250px) {
+	#main-texts {
+		.wrap {
+			padding: 50px 100px 300px 100px;
+			margin-bottom: 50px;
+		}
+
+		h1 {
+			font-size: 50px;
+			line-height: 60px;
+		}
+
+		.page {
+			font-size: 30px;
+			line-height: 40px;
+			left: 160px;
+			bottom: 130px;
+		}
+
+		img {
+			width: 500px;
+			left: 60px;
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#main-texts {
+		.wrap {
+			padding: 50px 20px 50px 20px;
+			text-align: center;
+		}
+
+		h1 {
+			font-size: 40px;
+			line-height: 50px;
+			margin-bottom: 20px;
+		}
+
+		.page {
+			position: relative;
+			font-size: 30px;
+			line-height: 40px;
+			left: 0;
+			bottom: 0;
+		}
+
+		img {
+			display: none;
+		}
+	}
+}
+
+//------------------------------ Чтение по алгоритму ---------------------------
+#main-reading-by-algorithm {
+	text-align: center;
+
+	.wrap {
+		padding: 38px 28px 0 28px;
+	}
+
+	h1 {
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 60px;
+		line-height: 73px;
+		letter-spacing: 0.04em;
+		margin-bottom: 41px;
+	}
+
+	.block {
+		position: relative;
+		height: 631px;
+		width: 100%;
+		background: url(/img/main/reading-by-algorithm.png) no-repeat center bottom / contain;
+	}
+
+	.page {
+		position: absolute;
+		display: block;
+		width: 200px;
+		height: 40px;
+		background: $assent_yellow;
+		border-radius: 30px;
+		font-weight: 400;
+		font-size: 28px;
+		line-height: 40px;
+
+		&:nth-child(1) {
+			top: 233px;
+			left: 556px;
+		}
+
+		&:nth-child(2) {
+			top: 289px;
+			left: 555px;
+		}
+
+		&:nth-child(3) {
+			top: 346px;
+			left: 569px;
+		}
+
+		&:nth-child(4) {
+			top: 403px;
+			left: 578px;
+		}
+
+		&:nth-child(5) {
+			top: 460px;
+			left: 586px;
+		}
+	}
+}
+
+@media (max-width: 1250px) {
+	#main-reading-by-algorithm {
+		.wrap {
+			padding: 30px 10px 20px 10px;
+		}
+
+		h1 {
+			font-size: 40px;
+			line-height: 50px;
+			margin-bottom: 30px;
+		}
+
+		.block {
+			height: auto;
+			background: none;
+		}
+
+		.page {
+			position: relative;
+			display: inline-block;
+			width: 500px;
+			margin-bottom: 20px;
+
+			&:nth-child(1), &:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+				top: 0;
+				left: 0;
+			}
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#main-reading-by-algorithm {
+		.wrap {
+			padding: 30px 10px 20px 10px;
+		}
+
+		h1 {
+			font-size: 30px;
+			line-height: 40px;
+		}
+
+		.page {
+			width: 100%;
+		}
+	}
+}

@@ -1,0 +1,254 @@
+.online-trainer-text {
+	.form {
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: space-between;
+
+		p {
+			padding: 0;
+			margin: 0 0 10px 0;
+		}
+
+		#texts {
+			font-size: 20px;
+		}
+
+		#speed {
+			width: 50px;
+			font-size: 20px;
+			text-align: center;
+		}
+	}
+
+	.text {
+		font-size: 26px;
+
+		.hid {
+			opacity: 0.2;
+		}
+
+		&.shading .hid {
+			opacity: 0;
+		}
+
+		span {
+			display: inline-block;
+			font-size: 26px;
+			font-weight: normal;
+		}
+	}
+
+}
+
+.online-trainer-words {
+	.form {
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: space-between;
+
+		p {
+			padding: 0;
+			margin: 0 0 10px 0;
+		}
+
+		#lavel {
+			font-size: 20px;
+		}
+
+		label {
+			vertical-align: middle;
+		}
+
+		#random {
+			vertical-align: middle;
+			width: 6mm;
+			height: 6mm;
+			border: 0.1mm solid black;
+		}
+
+		#speed {
+			width: 50px;
+			font-size: 20px;
+			text-align: center;
+		}
+	}
+
+	.word {
+		text-align: center;
+		margin-top: 50px;
+		font-size: 30px;
+	}
+}
+
+.online-trainer-alphabet {
+	.form {
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: center;
+
+		span {
+			margin-right: 5px;
+		}
+
+		#speed {
+			width: 50px;
+			font-size: 20px;
+			text-align: center;
+			margin: 0 5px;
+		}
+	}
+
+	.alphabet {
+		margin-top: 20px;
+		font-size: 30px;
+		border: 1px solid #000;
+		width: 100%;
+		height: calc(100vh - 100px);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.letters {
+		position: absolute;
+		width: 25px;
+		height: 75px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		align-items: center;
+		top: 0;
+		left: 0;
+	}
+}
+
+.online-trainer-rainbow {
+	.form {
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: center;
+
+		span {
+			margin-right: 5px;
+		}
+
+		#speed {
+			width: 50px;
+			font-size: 20px;
+			text-align: center;
+			margin: 0 5px;
+		}
+	}
+
+	.colors {
+		margin-top: 20px;
+		font-size: 40px;
+		border: 1px solid #000;
+		width: 100%;
+		height: calc(100vh - 100px);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.color {
+		position: absolute;
+		background: #e53935;
+		padding: 5px;
+		color: #fff;
+		top: 0;
+		left: 0;
+		text-transform: uppercase;
+		font-weight: bold;
+	}
+}
+
+.online-trainer-schult {
+	.container {
+		display: flex;
+		align-items: center;
+		margin-top: 20px;
+		flex-direction: column;
+	}
+
+	.table {
+		display: flex;
+		border: 1px solid #000;
+		width: 400px;
+		height: 400px;
+		flex-wrap: wrap;
+		margin-bottom: 20px;
+
+		@media (max-width: 460px) {
+			width: 280px;
+			height: 280px;
+		}
+	}
+
+	.cell {
+		width: 20%;
+		border: 1px solid #000;
+		box-sizing: border-box;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 40px;
+		cursor: pointer;
+		user-select: none;
+
+		&.act {
+			color: #bdbdbd;
+		}
+	}
+
+	.start {
+		font-size: 20px;
+		background: #e53935;
+		color: #fafafa;
+		padding: 5px;
+		margin-bottom: 20px;
+		cursor: pointer;
+
+		&.hid {
+			display: none;
+		}
+	}
+
+	.time {
+		font-size: 20px;
+		margin-bottom: 20px;
+		padding: 0;
+		border: none;
+		width: auto;
+		line-height: 1.6;
+		height: auto;
+		margin-right: 0;
+		font-size: 24px;
+
+		span {
+			display: inline-block;
+		}
+
+		&.hid {
+			display: none;
+		}
+	}
+
+	.results-title {
+		font-size: 24px;
+		margin-bottom: 10px;
+	}
+
+	.results {
+		margin-bottom: 20px;
+	}
+
+	.results div {
+		font-size: 22px;
+		margin-bottom: 5px;
+	}
+
+	.check {
+		&.hid {
+			display: none;
+		}
+	}
+}

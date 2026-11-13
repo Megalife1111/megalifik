@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+		<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+		<link rel="manifest" href="/site.webmanifest" />
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+		<meta name="msapplication-TileColor" content="#ffffff" />
+		<meta name="theme-color" content="#ffffff" />
+
+		<title>MegaLife - Обучающий IQ-Центр</title>
+		<link rel="stylesheet" href="/css/style.css?47" />
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<a href="/" class="logo">
+							<img src="/img/logo.png" alt="MegaLife" />
+						</a>
+						<span class="header">
+							<p class="header-title">MegaLife</p>
+							<p class="header-text">Международный обучающий IQ&#8209;центр</p>
+						</span>
+					</div>
+					<div class="col">
+						<a href="tel:+375297766307" class="number">+375297766307</a>
+					</div>
+				</div>
+			</div>
+		</header>
+		<section id="reading">
+			<div class="container">
+				<div class="wrap yellow_border">
+					<h1>Проверка скорости чтения</h1>
+					<div class="reading">
+						<div class="start_block act">
+							<button class="start">Начать</button><br />
+							<img src="/img/courses/reading.png" alt="reading" />
+						</div>
+						<div class="reading_block">
+							<h2>Как цыплёнок рисовал</h2>
+							<p>
+								Подарили цыплёнку 10 цветных карандашей. Подумал он и решил: нарисую 10 разноцветных котят. Потом ещё
+								подумал и решил: нет, лучше нарисовать 5 разноцветных котят. А ещё лучше одного разноцветного
+								котёнка.<br />
+								Котёнок получился смешной. Глаза у него голубые, усы красные, уши серые, спинка белая, а ножки такие:
+								голубая, зелёная, жёлтая, синяя.<br />
+								Стали цыплёнка спрашивать:<br />
+								– Почему ты так сделал?<br />
+								А он смеётся:<br />
+								– Неужели не понимаете? Это котёнок надел разноухую шапку. А это ему подарили белую шубку. И
+								разноцветные валенки купили. А усы у котёнка красные: он пил красный кисель. По усам текло, а в рот
+								ничего не попало.
+							</p>
+							<p class="author">Г. Цыферов</p>
+							<a href="#main" class="start_test">Прочитал. Готов отвечать на вопросы</a>
+						</div>
+						<div class="test_block">
+							<p class="question">1. Что подарили цыплёнку?</p>
+							<label>
+								<input type="radio" class="ans" name="0" value="0" />
+								<span>Краски</span>
+							</label>
+							<label>
+								<input type="radio" class="ans" name="0" value="0" />
+								<span>Кисточки</span>
+							</label>
+							<label>
+								<input type="radio" class="ans" name="0" value="1" />
+								<span>Карандаши</span>
+							</label>
+							<p class="question">2. Какого котёнка он нарисовал?</p>
+							<label>
+								<input type="radio" class="ans" name="1" value="1" />
+								<span>Одного разноцветного котёнка</span>
+							</label>
+							<label>
+								<input type="radio" class="ans" name="1" value="0" />
+								<span>10 разноцветных котят</span>
+							</label>
+							<label>
+								<input type="radio" class="ans" name="1" value="0" />
+								<span>5 разноцветных котят</span>
+							</label>
+							<p class="question">3. Почему у котёнка были усы красного цвета?</p>
+							<label>
+								<input type="radio" class="ans" name="2" value="0" />
+								<span>Другого цвета не хватило</span>
+							</label>
+							<label>
+								<input type="radio" class="ans" name="2" value="1" />
+								<span>Он пил красный кисель</span>
+							</label>
+							<label>
+								<input type="radio" class="ans" name="2" value="0" />
+								<span>Это его любимый цвет</span>
+							</label>
+							<button class="end_test">Проверить</button>
+						</div>
+						<div class="result_block">
+							<div id="form" class="reading_form">
+								<label>
+									<div class="label">Имя</div>
+									<input class="name" type="text" name="name" required placeholder="Иван" />
+								</label>
+								<label>
+									<div class="label">Фамилия</div>
+									<input class="surname" type="text" name="surname" required placeholder="Иванов" />
+								</label>
+								<input class="res title" type="text" name="title" value='Как цыплёнок рисовал" 99 слов' />
+							</div>
+
+							<div class="value">Количество слов в тексте:</div>
+							<div class="result num_words">99</div>
+							<br />
+							<div class="value">Время чтения:</div>
+							<div class="result"><span class="read_time">0</span> секунд</div>
+							<br />
+							<div class="value">Правильных ответов:</div>
+							<div class="result"><span class="answers">0</span> из 3</div>
+							<br />
+							<div class="value">Скорость чтения:</div>
+							<div class="result"><span class="speed">0</span> слов в минуту</div>
+							<br /><button class="send">Отправить</button>
+							<button class="sign_up_btn">Записаться на пробное занятие</button>
+							<p>
+								Онлайн в удобное для вас время. Центр МегаЛайф. Для детей 6-12. Узнайте как улучшить концентрацию
+								внимания, памяти, скорость чтения - и Ваш ребёнок полюбит учиться.
+							</p>
+							<img class="price_list" src="/img/leaders.jpg" alt="list" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--main-->
+		<footer></footer>
+		<script src="/js/jQuery.js?47"></script>
+		<script type="text/javascript" src="/js/script.js?47"></script>
+		<script type="text/javascript" src="/js/reading.js?47"></script>
+	</body>
+</html>

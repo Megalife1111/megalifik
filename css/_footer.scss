@@ -1,0 +1,207 @@
+footer {
+	text-align: center;
+	padding-bottom: 100px;
+}
+
+@media (max-width: 1250px) {
+	footer {
+		padding-bottom: 80px;
+	}
+}
+
+iframe {
+	width: 100%;
+	height: 600px;
+	margin-bottom: 120px;
+}
+
+@media (max-width: 1250px) {
+	iframe {
+		height: 300px;
+		margin-bottom: 50px;
+	}
+}
+
+@media (max-width: 650px) {
+	iframe {
+		height: 50vw;
+	}
+}
+
+@media (max-width: 320px) {
+	#main {
+		iframe {
+			height: 150px;
+		}
+	}
+}
+
+// ----------------------- Обменяй УМНИКИ на подарки ------------------------
+.exchange, .exchange:active, .exchange:hover, .exchange:focus {
+	width: 500px;
+	height: 80px;
+	line-height: 80px;
+	text-align: center;
+	display: inline-block;
+	border-radius: 30px;
+	font-size: 26px;
+}
+
+@media (max-width: 1250px) {
+	.exchange, .exchange:active, .exchange:hover, .exchange:focus {
+		width: 400px;
+		height: 60px;
+		line-height: 60px;
+		font-size: 20px;
+	}
+}
+
+@media (max-width: 650px) {
+	.exchange, .exchange:active, .exchange:hover, .exchange:focus {
+		width: 270px;
+		height: 40px;
+		line-height: 40px;
+		font-size: 16px;
+	}
+}
+
+// ----------------------------- Инструкция -----------------------------
+#instruction {
+	border-radius: 30px;
+	text-align: left;
+	padding: 57px 70px 35px 71px;
+	position: relative;
+	margin-bottom: 90px;
+	background: $back;
+
+	.boy {
+		position: absolute;
+		width: 240px;
+		top: 150px;
+		right: 124px;
+	}
+
+	h2 {
+		text-align: center;
+		font-family: 'Montserrat Alternates';
+		font-weight: 600;
+		font-size: 40px;
+		line-height: 49px;
+		margin-bottom: 60px;
+	}
+
+	span {
+		color: $assent_violet;
+		text-transform: uppercase;
+	}
+
+	li {
+		display: flex;
+		align-items: center;
+		padding: 0;
+		margin: 0;
+		margin-bottom: 31px;
+
+		&:nth-child(1) p {
+			width: 796px;
+		}
+
+		&:nth-child(2) p {
+			width: 632px;
+		}
+
+		&:nth-child(3) p {
+			width: 685px;
+		}
+
+		&:nth-child(4) p {
+			width: 651px;
+		}
+
+		&:nth-child(5) p {
+			width: 900px;
+		}
+
+		&:nth-child(6) p {
+			width: 970px;
+		}
+
+		&:nth-child(7) p {
+			width: 858px;
+		}
+
+		&:nth-child(8) p {
+			width: 955px;
+		}
+	}
+
+	.check {
+		width: 66px;
+		height: 66px;
+		margin-top: 0;
+		margin-right: 27px;
+	}
+
+	p {
+		font-size: 30px;
+		line-height: 130%;
+		letter-spacing: 0.02em;
+	}
+}
+
+@media (max-width: 1250px) {
+	#instruction {
+		padding: 20px 40px 10px 40px;
+		margin-bottom: 50px;
+
+		.boy {
+			display: none;
+		}
+
+		h2 {
+			font-size: 30px;
+			line-height: 40px;
+			margin-bottom: 40px;
+		}
+
+		li {
+			margin-bottom: 20px;
+		}
+
+		.check {
+			width: 40px;
+			height: 40px;
+			margin-right: 20px;
+		}
+
+		p {
+			font-size: 20px;
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#instruction {
+		padding: 10px 10px 0px 10px;
+
+		h2 {
+			font-size: 25px;
+			line-height: 35px;
+			margin-bottom: 20px;
+		}
+
+		li {
+			margin-bottom: 15px;
+		}
+
+		.check {
+			width: 40px;
+			height: 40px;
+			margin-right: 10px;
+		}
+
+		p {
+			font-size: 14px;
+		}
+	}
+}

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+		<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+		<link rel="manifest" href="/site.webmanifest" />
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+		<meta name="msapplication-TileColor" content="#ffffff" />
+		<meta name="theme-color" content="#ffffff" />
+
+		<title>MegaLife - Обучающий IQ-Центр</title>
+		<link rel="stylesheet" href="/css/style.css?47" />
+	</head>
+	<body class="green_bg">
+		<header>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<a href="/" class="logo">
+							<img src="/img/logo.png" alt="MegaLife" />
+						</a>
+						<span class="header">
+							<p class="header-title">MegaLife</p>
+							<p class="header-text">Международный обучающий IQ&#8209;центр</p>
+						</span>
+					</div>
+					<div class="col">
+						<a href="tel:+375297766307" class="number">+375297766307</a>
+					</div>
+				</div>
+			</div>
+		</header>
+		<section id="class">
+			<div class="container">
+				<div class="wrap violet_border">
+					<div class="row">
+						<h1>Занятие 12</h1>
+						<div id="form" class="violet">
+							<input class="name" type="text" placeholder="Имя" />
+							<input class="surname" type="text" placeholder="Фамилия" />
+						</div>
+					</div>
+
+					<!--test1-->
+					<div class="test test1">
+						<p class="condition">
+							1. Тест на распределение внимания: сочетание букв “ine” обведи кружочком, сочетание букв “ane” зачеркни.
+							Посчитай количество сочетаний “ite” , ответ запиши в ячейке.
+						</p>
+						<p class="condition">
+							Чтобы <b>обвести</b>, нажми по сочетанию букв мышкой один раз, а чтобы <b>зачеркнуть - два</b>.
+						</p>
+						<div class="section">
+							<div class="grid letters_grid words grid-9 grid-m-9 grid-s-5">
+								<div class="cell violet_c">ine</div>
+								<div class="cell green_c">ite</div>
+								<div class="cell orange_c">ane</div>
+								<div class="cell">ane</div>
+								<div class="cell violet_c">ine</div>
+								<div class="cell">ane</div>
+								<div class="cell green_c">ine</div>
+								<div class="cell red">ite</div>
+								<div class="cell violet_c">ine</div>
+								<!--////////////////////////-->
+								<div class="cell green_c">ane</div>
+								<div class="cell violet_c">ane</div>
+								<div class="cell">ine</div>
+								<div class="cell green_c">ite</div>
+								<div class="cell">ane</div>
+								<div class="cell orange_c">ine</div>
+								<div class="cell">ine</div>
+								<div class="cell violet_c">ane</div>
+								<div class="cell">ite</div>
+								<!--////////////////////////-->
+								<div class="cell">ane</div>
+								<div class="cell">ine</div>
+								<div class="cell violet_c">ite</div>
+								<div class="cell">ine</div>
+								<div class="cell violet_c">ane</div>
+								<div class="cell">ane</div>
+								<div class="cell violet_c">ite</div>
+								<div class="cell">ane</div>
+								<div class="cell green_c">ine</div>
+								<!--////////////////////////-->
+								<div class="cell violet_c">ine</div>
+								<div class="cell green_c">ite</div>
+								<div class="cell orange_c">ane</div>
+								<div class="cell violet_c">ine</div>
+								<div class="cell">ane</div>
+								<div class="cell orange_c">ite</div>
+								<div class="cell green_c">ane</div>
+								<div class="cell">ine</div>
+								<div class="cell green_c">ane</div>
+								<!--////////////////////////-->
+								<div class="cell green_c">ite</div>
+								<div class="cell orange_c">ane</div>
+								<div class="cell">ine</div>
+								<div class="cell green_c">ite</div>
+								<div class="cell violet_c">ite</div>
+								<div class="cell">ine</div>
+								<div class="cell">ine</div>
+								<div class="cell violet_c">ine</div>
+								<div class="cell">ane</div>
+							</div>
+							<div class="example">
+								<div class="answer answer1">
+									<div class="block">ite</div>
+									<div class="block">
+										<input class="quantity" type="text" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="check green">
+							<div class="col">
+								<button class="verify">Проверить</button>
+								<button class="restart">Начать заново</button>
+								<span class="timer">00:00</span>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+						<p class="result"></p>
+						<p class="phrase"></p>
+					</div>
+					<!--test2-->
+					<div class="test test2">
+						<p class="condition">2. Тест на устойчивость внимания: обведи в кружок все слова “kite”.</p>
+						<p class="condition">Чтобы <b>обвести</b>, нажми по слову мышкой.</p>
+						<div class="section">
+							<div class="grid letters_grid words grid-8 grid-m-7 grid-s-4">
+								<div class="cell orange_c">kite</div>
+								<div class="cell darkblue">stop</div>
+								<div class="cell orange_c">kite</div>
+								<div class="cell">kite</div>
+								<div class="cell orange_c">pot</div>
+								<div class="cell lightblue">stop</div>
+								<div class="cell orange_c">kite</div>
+								<div class="cell lightorange">pot</div>
+								<!--////////////////////////-->
+								<div class="cell green_c">pot</div>
+								<div class="cell orange_c">stop</div>
+								<div class="cell lightblue">pot</div>
+								<div class="cell blue">pot</div>
+								<div class="cell">kite</div>
+								<div class="cell green_c">kite</div>
+								<div class="cell">pot</div>
+								<div class="cell blue">stop</div>
+								<!--////////////////////////-->
+								<div class="cell">kite</div>
+								<div class="cell green_c">kite</div>
+								<div class="cell orange_c">stop</div>
+								<div class="cell lightblue">pot</div>
+								<div class="cell orange_c">stop</div>
+								<div class="cell">stop</div>
+								<div class="cell lightorange">stop</div>
+								<div class="cell">kite</div>
+								<!--////////////////////////-->
+								<div class="cell green_c">stop</div>
+								<div class="cell darkblue">pot</div>
+								<div class="cell">kite</div>
+								<div class="cell orange_c">stop</div>
+								<div class="cell lightblue">kite</div>
+								<div class="cell orange_c">pot</div>
+								<div class="cell blue">pot</div>
+								<div class="cell orange_c">kite</div>
+								<!--////////////////////////-->
+								<div class="cell blue">kite</div>
+								<div class="cell">kite</div>
+								<div class="cell green_c">pot</div>
+								<div class="cell blue">kite</div>
+								<div class="cell blue">kite</div>
+								<div class="cell">pot</div>
+								<div class="cell lightblue">stop</div>
+								<div class="cell">pot</div>
+								<!--////////////////////////-->
+								<div class="cell">pot</div>
+								<div class="cell orange_c">stop</div>
+								<div class="cell blue">stop</div>
+								<div class="cell">kite</div>
+								<div class="cell orange_c">pot</div>
+								<div class="cell green_c">stop</div>
+								<div class="cell blue">kite</div>
+								<div class="cell lightorange">stop</div>
+								<!--////////////////////////-->
+								<div class="cell lightorange">kite</div>
+								<div class="cell">kite</div>
+								<div class="cell orange_c">pot</div>
+								<div class="cell green_c">pot</div>
+								<div class="cell green_c">kite</div>
+								<div class="cell orange_c">pot</div>
+								<div class="cell">stop</div>
+								<div class="cell lightblue">kite</div>
+							</div>
+						</div>
+						<div class="check green">
+							<div class="col">
+								<button class="verify">Проверить</button>
+								<button class="restart">Начать заново</button>
+								<span class="timer">00:00</span>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+						<p class="result"></p>
+						<p class="phrase"></p>
+					</div>
+					<!--test3-->
+					<div class="test test3">
+						<p class="condition">
+							3. Тест на зрительную память. Посмотри на изображения и запомни их. Теперь нарисуй их по памяти.
+						</p>
+						<div class="section">
+							<div class="canv">
+								<div class="full_screen">
+									<svg
+										x="0px"
+										y="0px"
+										viewBox="0 0 512 512"
+										style="enable-background: new 0 0 512 512"
+										xml:space="preserve">
+										<g>
+											<g>
+												<g>
+													<path
+														d="M128,32V0H16C7.163,0,0,7.163,0,16v112h32V54.56L180.64,203.2l22.56-22.56L54.56,32H128z" />
+													<path
+														d="M496,0H384v32h73.44L308.8,180.64l22.56,22.56L480,54.56V128h32V16C512,7.163,504.837,0,496,0z" />
+													<path
+														d="M480,457.44L331.36,308.8l-22.56,22.56L457.44,480H384v32h112c8.837,0,16-7.163,16-16V384h-32V457.44z" />
+													<path
+														d="M180.64,308.64L32,457.44V384H0v112c0,8.837,7.163,16,16,16h112v-32H54.56L203.2,331.36L180.64,308.64z" />
+												</g>
+											</g>
+										</g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+									</svg>
+								</div>
+								<canvas id="c1"></canvas>
+							</div>
+						</div>
+						<div class="color_container">Цвет: <input class="color" type="color" /></div>
+						<div class="check green">
+							<div class="col">
+								<button class="restart">Начать заново</button>
+								<button class="back">Назад</button>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+					</div>
+					<!--test4-->
+					<div class="test test4">
+						<p class="condition">4. Соотнеси фразы с картинками и соедини их между собой:</p>
+						<div class="section">
+							<div class="canv">
+								<div class="full_screen">
+									<svg
+										x="0px"
+										y="0px"
+										viewBox="0 0 512 512"
+										style="enable-background: new 0 0 512 512"
+										xml:space="preserve">
+										<g>
+											<g>
+												<g>
+													<path
+														d="M128,32V0H16C7.163,0,0,7.163,0,16v112h32V54.56L180.64,203.2l22.56-22.56L54.56,32H128z" />
+													<path
+														d="M496,0H384v32h73.44L308.8,180.64l22.56,22.56L480,54.56V128h32V16C512,7.163,504.837,0,496,0z" />
+													<path
+														d="M480,457.44L331.36,308.8l-22.56,22.56L457.44,480H384v32h112c8.837,0,16-7.163,16-16V384h-32V457.44z" />
+													<path
+														d="M180.64,308.64L32,457.44V384H0v112c0,8.837,7.163,16,16,16h112v-32H54.56L203.2,331.36L180.64,308.64z" />
+												</g>
+											</g>
+										</g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+									</svg>
+								</div>
+								<canvas id="c2"></canvas>
+							</div>
+						</div>
+						<div class="color_container">Цвет: <input class="color" type="color" /></div>
+						<div class="check green">
+							<div class="col">
+								<button class="restart">Начать заново</button>
+								<button class="back">Назад</button>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+					</div>
+					<!--test5-->
+					<div class="test test5">
+						<p class="condition">5. Найди продолжение фразы и проведи линию от одной части к другой:</p>
+						<div class="section">
+							<div class="canv">
+								<div class="full_screen">
+									<svg
+										x="0px"
+										y="0px"
+										viewBox="0 0 512 512"
+										style="enable-background: new 0 0 512 512"
+										xml:space="preserve">
+										<g>
+											<g>
+												<g>
+													<path
+														d="M128,32V0H16C7.163,0,0,7.163,0,16v112h32V54.56L180.64,203.2l22.56-22.56L54.56,32H128z" />
+													<path
+														d="M496,0H384v32h73.44L308.8,180.64l22.56,22.56L480,54.56V128h32V16C512,7.163,504.837,0,496,0z" />
+													<path
+														d="M480,457.44L331.36,308.8l-22.56,22.56L457.44,480H384v32h112c8.837,0,16-7.163,16-16V384h-32V457.44z" />
+													<path
+														d="M180.64,308.64L32,457.44V384H0v112c0,8.837,7.163,16,16,16h112v-32H54.56L203.2,331.36L180.64,308.64z" />
+												</g>
+											</g>
+										</g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+										<g></g>
+									</svg>
+								</div>
+								<canvas id="c3"></canvas>
+							</div>
+						</div>
+						<div class="check green">
+							<div class="col">
+								<button class="restart">Начать заново</button>
+								<button class="back">Назад</button>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+					</div>
+					<!--test6-->
+					<div class="test test6">
+						<p class="condition">6. Прочитай фразы и перевод к ним:</p>
+						<p class="patter">
+							clap your hands - хлопать в ладоши<br />
+							stretch up high - потянуться вверх<br />
+							touch your toes - коснуться носочков<br />
+							turn around - обернуться вокруг себя<br />
+							stamp your feet - топать ногами
+						</p>
+					</div>
+					<!--test7-->
+					<div class="test test7">
+						<p class="condition">
+							7. Чтение. Буквосочетание "igh" даёт звук [aɪ]. Посмотри внимательно на слова и прочти их.
+						</p>
+						<div class="section image">
+							<img src="/img/words2.png" alt="words" />
+						</div>
+					</div>
+					<!--test8-->
+					<div class="test test8">
+						<p class="condition">8. Вставь подходящие по цвету названия животных.</p>
+						<div class="section">
+							<img src="/img/cipher3.png" alt="cipher" />
+						</div>
+						<div class="section">
+							<div class="memorize_words words2">
+								<div class="string">
+									<span>19 11 9 <input type="text" class="inp1" /></span>
+								</div>
+								<div class="string">
+									<span>6 9 19 8 9 14 7 <input type="text" class="inp2" /></span>
+								</div>
+								<div class="string">
+									<span>19 11 1 20 5 <input type="text" class="inp3" /></span>
+								</div>
+								<div class="string">
+									<span>19 12 5 4 7 5 <input type="text" class="inp4" /></span>
+								</div>
+								<div class="string">
+									<span>16 12 1 25&emsp;19 14 15 23 2 1 12 12<input type="text" class="inp5" /></span>
+								</div>
+							</div>
+						</div>
+						<div class="check green">
+							<div class="col">
+								<button class="verify">Проверить</button>
+								<button class="restart">Начать заново</button>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+						<p class="result"></p>
+						<p class="phrase"></p>
+					</div>
+					<!--test9-->
+					<div class="test test9">
+						<p class="condition">9. Посмотри на картинку и сосчитай животных:</p>
+						<div class="section">
+							<img src="/img/animals2.png" alt="animals" />
+						</div>
+						<div class="section">
+							<div class="memorize_words words2">
+								<div class="string"><img src="/img/animal1.png" alt="animal" /><input type="text" class="inp1" /></div>
+								<div class="string"><img src="/img/animal2.png" alt="animal" /><input type="text" class="inp2" /></div>
+								<div class="string"><img src="/img/animal3.png" alt="animal" /><input type="text" class="inp3" /></div>
+								<div class="string"><img src="/img/animal4.png" alt="animal" /><input type="text" class="inp4" /></div>
+								<div class="string"><img src="/img/animal5.png" alt="animal" /><input type="text" class="inp5" /></div>
+							</div>
+						</div>
+						<div class="check green">
+							<div class="col">
+								<button class="verify">Проверить</button>
+								<button class="restart">Начать заново</button>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+						<p class="result"></p>
+						<p class="phrase"></p>
+						<p class="condition">
+							Назови количество каждого животного, например:<br />
+							- There are four crocodiles.
+						</p>
+					</div>
+					<!--test10-->
+					<div class="test test10">
+						<p class="condition">
+							10. Прочитай строки по направлениям, указанным стрелочками. Какие слова ты узнаешь? Выпиши их отдельно.
+						</p>
+						<div class="section">
+							<div class="directions">
+								<div class="block">
+									<img src="/img/direction11.png" alt="direction" class="img1" />
+									<span>
+										<input type="text" class="inp1" />
+									</span>
+									<span>
+										<input type="text" class="inp2" />
+									</span>
+									<span>
+										<input type="text" class="inp3" />
+									</span>
+								</div>
+								<div class="block">
+									<img src="/img/direction12.png" alt="direction" class="img1" />
+									<span>
+										<input type="text" class="inp4" />
+									</span>
+									<span>
+										<input type="text" class="inp5" />
+									</span>
+									<span>
+										<input type="text" class="inp6" />
+									</span>
+									<span>
+										<input type="text" class="inp7" />
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="check green">
+							<div class="col">
+								<button class="verify">Проверить</button>
+								<button class="restart">Начать заново</button>
+							</div>
+							<button class="send">Отправить результаты</button>
+						</div>
+						<p class="result"></p>
+						<p class="phrase"></p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--main-->
+		<footer>
+			<div class="container">
+				<div id="instruction" class="violet_border">
+					<img class="boy" src="/img/instruction_boy.png" alt="boy" />
+					<h2>Как забрать <span>УМНИКИ</span>?</h2>
+					<ul>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Выполнение домашнего задания в учебном пособии — <span>1 УМНИК</span></p>
+						</li>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Каждодневное чтение со стиранием скретч-слоя — <span>1 УМНИК</span></p>
+						</li>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Чёткий рассказ скороговорки без нейробики — <span>1 УМНИК</span></p>
+						</li>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Чёткий рассказ скороговорки с нейробикой — <span>2 УМНИКА</span></p>
+						</li>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Выполнение зарядки для глаз по тренажеру в центре Megalife — <span>1 УМНИК</span></p>
+						</li>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Выполнение зарядки для глаз по тренажеру целую неделю дома — <span>1 УМНИК</span></p>
+						</li>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Запомнили на уроке все слова — 2 УМНИКА , половину слов — <span>1 УМНИК</span></p>
+						</li>
+						<li>
+							<img class="check" src="/img/check_mark.png" alt="check" />
+							<p>Размещение фотографии с хештегом #megalifeby в социальные сети — <span>5 УМНИКОВ</span></p>
+						</li>
+					</ul>
+				</div>
+				<a href="/img/list_eng.jpg" target="_blank" class="exchange violet_fill">Обменяй УМНИКИ на подарки</a>
+			</div>
+		</footer>
+		<script src="/js/jQuery.js?47"></script>
+		<script type="text/javascript" src="/js/script.js?47"></script>
+		<script type="text/javascript" src="/js/english/course/script12.js?47"></script>
+	</body>
+</html>

@@ -1,0 +1,325 @@
+@font-face {
+	font-family: 'Blogger Sans';
+	src: local('Blogger Sans Bold'), local('BloggerSans-Bold'), url('../fonts/Bloggersansbold.woff2') format('woff2'), url('../fonts/Bloggersansbold.woff') format('woff'), url('../fonts/Bloggersansbold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+}
+
+#conformity {
+	overflow: visible;
+	padding-bottom: 100px;
+
+	.wrap {
+		padding: 0 102px 26px 102px;
+	}
+
+	.condition {
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+}
+
+@media (max-width: 1250px) {
+	#conformity {
+		.wrap {
+			padding: 0 30px 0 30px;
+		}
+
+		.condition {
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#conformity {
+		.wrap {
+			padding: 0 10px 0 10px;
+		}
+
+		.condition {
+			font-size: 16px;
+			margin-bottom: 10px;
+		}
+	}
+}
+
+.conformity_check {
+	justify-content: flex-end;
+	align-items: center;
+
+	.timer {
+		margin-right: 12px;
+	}
+}
+
+@media (max-width: 650px) {
+	.conformity_check {
+		justify-content: flex-end;
+		align-items: center;
+
+		.send {
+			margin-top: 0;
+			width: auto;
+			padding: 0 10px;
+		}
+
+		.timer {
+			margin-right: 12px;
+			width: auto;
+		}
+	}
+}
+
+.conformity {
+	td {
+		border: 2px dashed rgba(#fff, 0.5);
+		padding: 0;
+		vertical-align: middle;
+	}
+
+	.card {
+		width: 150px;
+		height: 150px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 35px;
+		transition-duration: 0.3s;
+		backface-visibility: hidden;
+		cursor: pointer;
+		perspective: 1000px;
+
+		&:hover {
+			background-color: #00000028;
+		}
+
+		&.conformity_del {
+			transform: rotateY(91deg);
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+
+	.card_not {
+		width: 150px;
+		height: 150px;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+}
+
+.conformity1 {
+	background: #642383;
+	color: #F7ED5F;
+	font-family: 'Blogger Sans';
+	font-weight: 700;
+	font-style: normal;
+
+	td {
+		border: 2px dashed #7D4A95;
+	}
+
+	.card {
+		border: 4px solid #642383;
+
+		&.conformity_act {
+			border: 4px solid #FAF48C;
+		}
+	}
+
+	.card_not {
+		border: 2px solid #642383;
+	}
+}
+
+.conformity2 {
+	background: #F8F28C;
+	color: #652484;
+	font-family: 'Blogger Sans';
+	font-weight: 700;
+	font-style: normal;
+
+	td {
+		border: 2px dashed #F3DA68;
+	}
+
+	.card {
+		border: 4px solid #F8F28C;
+
+		&.conformity_act {
+			border: 4px solid #7CBE41;
+		}
+	}
+
+	.card_not {
+		border: 2px solid #F8F28C;
+	}
+}
+
+.conformity3 {
+	background: #7BBD40;
+	color: #FCF6AC;
+	font-family: 'Blogger Sans';
+	font-weight: 700;
+	font-style: normal;
+
+	td {
+		border: 2px dashed #A6D058;
+	}
+
+	.card {
+		border: 4px solid #7BBD40;
+
+		&.conformity_act {
+			border: 4px solid #FAF48E;
+		}
+	}
+
+	.card_not {
+		border: 2px solid #7BBD40;
+	}
+}
+
+@media (max-width: 1250px) {
+	.conformity {
+		.card {
+			width: 100px;
+			height: 100px;
+			font-size: 20px;
+		}
+
+		.card_not {
+			width: 100px;
+			height: 100px;
+		}
+	}
+}
+
+@media (max-width: 600px) {
+	.conformity {
+		.card {
+			width: 70px;
+			height: 70px;
+			font-size: 15px;
+		}
+
+		.card_not {
+			width: 70px;
+			height: 70px;
+		}
+	}
+}
+
+@media (max-width: 400px) {
+	.conformity {
+		.card {
+			width: 50px;
+			height: 50px;
+			font-size: 12px;
+		}
+
+		.card_not {
+			width: 50px;
+			height: 50px;
+		}
+	}
+}
+
+#form.conformity_form {
+	display: block;
+	width: 500px;
+	height: 329px;
+	position: relative;
+	background: url(/img/courses/conformity-form.png) no-repeat center center / contain;
+	margin-top: -15px;
+
+	.res {
+		display: none;
+	}
+
+	.name, .surname {
+		width: 125px;
+		position: absolute;
+		left: 364px;
+		right: auto;
+		text-align: left;
+		font-family: 'Roboto';
+		font-weight: 400;
+		font-size: 22px;
+		line-height: 26px;
+		padding-left: 14px;
+		box-sizing: border-box;
+		border: none;
+
+		&::placeholder {
+			color: $font;
+		}
+	}
+
+	.name {
+		top: 206px;
+	}
+
+	.surname {
+		top: 244px;
+	}
+
+	&::before {
+		content: '';
+		display: block;
+		position: absolute;
+		width: 37px;
+		height: 37px;
+		top: 173px;
+		left: 318px;
+		border-radius: 5px;
+	}
+
+	&.violet::before {
+		background: $assent_violet;
+	}
+
+	&.yellow::before {
+		background: $assent_yellow;
+	}
+
+	&.green::before {
+		background: $assent_green;
+	}
+}
+
+@media (max-width: 650px) {
+	#form.conformity_form {
+		width: 100%;
+		height: auto;
+		background: none;
+		margin-top: 20px;
+
+		.name, .surname {
+			width: 100%;
+			position: relative;
+			left: 0;
+			top: 0;
+			font-size: 22px;
+			line-height: 26px;
+			margin-bottom: 5px;
+			padding: 5px 10px;
+			border: 1px solid #000;
+			border-radius: 5px;
+		}
+
+		&::before {
+			display: none;
+		}
+	}
+}
