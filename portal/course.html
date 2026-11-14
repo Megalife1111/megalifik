@@ -45,15 +45,15 @@
 
       document.getElementById("app").innerHTML = `
         ${renderTopbar(user)}
-        <div class="lms-card" style="margin-bottom:20px">
+        <div class="lms-card">
           <span class="lms-badge ${badge.cls}">${badge.text}</span>
           <h1 class="lms-title">${data.course.title}</h1>
           <p class="lms-subtitle">${data.course.description || ""}</p>
           <p>Прогресс: <strong>${data.progress.percent}%</strong> (${data.progress.completed}/${data.progress.total})</p>
-          <div class="lms-progress" style="max-width:400px"><span style="width:${data.progress.percent}%"></span></div>
+          <div class="lms-progress lms-progress--narrow"><span style="width:${data.progress.percent}%"></span></div>
         </div>
         <section class="lms-card">
-          <h2 style="margin-top:0">Материалы</h2>
+          <h2 class="lms-card-heading">Материалы</h2>
           <ul class="lms-material-list">${list}</ul>
         </section>`;
       wireLogout();

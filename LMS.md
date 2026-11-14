@@ -26,7 +26,7 @@ npm start
 Откройте **полный** адрес (обязательно порт **3000**):
 
 - Вход: [http://127.0.0.1:3000/portal/login.html](http://127.0.0.1:3000/portal/login.html)
-- Курсы (после входа): [http://127.0.0.1:3000/portal/dashboard.html](http://127.0.0.1:3000/portal/dashboard.html)
+- Каталог курсов (можно **без входа**): [http://127.0.0.1:3000/portal/dashboard.html](http://127.0.0.1:3000/portal/dashboard.html)
 
 Старая главная с плитками без авторизации: [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
 

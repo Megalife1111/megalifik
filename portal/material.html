@@ -5,15 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Материал — MegaLife</title>
     <link rel="stylesheet" href="/css/lms.css" />
-    <style>
-      .lms-frame {
-        width: 100%;
-        min-height: 70vh;
-        border: 0;
-        border-radius: var(--lms-radius-sm);
-        background: #fff;
-      }
-    </style>
   </head>
   <body class="lms-page">
     <main class="lms-shell" id="app">Загрузка…</main>
@@ -34,16 +25,16 @@
       const done = data.progress.status === "completed";
       document.getElementById("app").innerHTML = `
         ${renderTopbar(user)}
-        <div class="lms-card" style="margin-bottom:16px">
+        <div class="lms-card">
           <p><a class="lms-link" href="course.html?id=${data.course.id}">← ${data.course.title}</a></p>
           <h1 class="lms-title">${data.material.title}</h1>
-          <button type="button" class="lms-btn lms-btn-primary" id="complete-btn" ${done ? "disabled" : ""}>
+          <button type="button" class="lms-btn lms-btn-primary lms-btn-block" id="complete-btn" ${done ? "disabled" : ""}>
             ${done ? "Материал пройден" : "Отметить как пройденный"}
           </button>
         </div>
-        <section class="lms-card" style="padding:0;overflow:hidden">
+        <div class="lms-frame-wrap">
           <iframe class="lms-frame" title="${data.material.title}" src="${data.material.content_url}"></iframe>
-        </section>`;
+        </div>`;
       wireLogout();
 
       document.getElementById("complete-btn")?.addEventListener("click", async () => {
