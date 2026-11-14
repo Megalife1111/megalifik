@@ -2,7 +2,18 @@
 
 Платформа обучения поверх существующих HTML-материалов.
 
-## Запуск
+## Запуск на своём компьютере
+
+LMS **не работает**, если открыть только файл `index.html` или `portal/login.html` двойным щелчком (`file://…`). Нужен запущенный **Node-сервер** на **вашей** машине — `localhost` в браузере это всегда ваш ПК, а не облачный агент.
+
+**Из корня репозитория:**
+
+```bash
+chmod +x start-lms.sh   # Linux / macOS, один раз
+./start-lms.sh
+```
+
+**Или вручную:**
 
 ```bash
 cd server
@@ -12,7 +23,23 @@ npm run seed
 npm start
 ```
 
-Откройте `http://localhost:3000/portal/login.html`
+Откройте **полный** адрес (обязательно порт **3000**):
+
+- Вход: [http://127.0.0.1:3000/portal/login.html](http://127.0.0.1:3000/portal/login.html)
+- Курсы (после входа): [http://127.0.0.1:3000/portal/dashboard.html](http://127.0.0.1:3000/portal/dashboard.html)
+
+Старая главная с плитками без авторизации: [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
+
+### Если «не открывается»
+
+| Симптом | Что сделать |
+|--------|-------------|
+| «Сайт недоступен» / connection refused | В терминале нет `npm start` — запустите `./start-lms.sh` или `cd server && npm start`. Дождитесь строки `MegaLife LMS on http://localhost:3000`. |
+| Открыли `localhost` без `:3000` | Укажите порт: `http://localhost:3000/portal/login.html` |
+| Открыли HTML-файл с диска | Так API недоступен — только через сервер, см. выше. |
+| Работаете в **Cloud Agent** в Cursor | Сервер крутится на удалённой VM. Пробросьте порт **3000** (Ports / Forwarded Ports) или запустите LMS **локально** у себя по инструкции. |
+| Порт 3000 занят | `PORT=3001 npm start` и открывайте `http://127.0.0.1:3001/portal/login.html` |
+| Нет Node.js | Установите LTS с [nodejs.org](https://nodejs.org/) (нужна версия 18+). |
 
 **Админ по умолчанию (после seed):** `admin@megalife.local` / `Admin12345`
 
