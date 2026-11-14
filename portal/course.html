@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Курс — MegaLife</title>
+    <link rel="stylesheet" href="/css/lms.css" />
+  </head>
+  <body class="lms-page">
+    <main class="lms-shell" id="app">Загрузка…</main>
+    <script type="module">
+      import { api } from "/js/lms/api.js";
+      import { requireUser, renderTopbar, wireLogout, accessLabel } from "/js/lms/shell.js";
+
+      const user = await requireUser();
+      const id = new URLSearchParams(location.search).get("id");
+      if (!id) location.href = "dashboard.html";
+
+      let data;
+      try {
+        data = await api(`/api/courses/${id}`);
+      } catch (e) {
+        document.getElementById("app").innerHTML = `${renderTopbar(user)}<div class="lms-card lms-alert-error">${e.message}</div>`;
+        wireLogout();
+        throw e;
+      }
+
+      const badge = accessLabel(data.access);
+      const list = data.materials
+        .map((m) => {
+          const done = m.progress.status === "completed";
+          const cls = ["lms-material-item", done ? "done" : "", m.locked ? "locked" : ""].filter(Boolean).join(" ");
+          const link = !m.locked && data.access.canView
+            ? `<a class="lms-btn lms-btn-primary" href="material.html?id=${m.id}">Открыть</a>`
+            : `<span class="lms-badge lms-badge-blocked">Заблокировано</span>`;
+          return `<li class="${cls}">
+            <div>
+              <strong>${m.title}</strong>
+              ${done ? '<span class="lms-badge lms-badge-open">Пройден</span>' : ""}
+            </div>
+            ${link}
+          </li>`;
+        })
+        .join("");
+
+      document.getElementById("app").innerHTML = `
+        ${renderTopbar(user)}
+        <div class="lms-card" style="margin-bottom:20px">
+          <span class="lms-badge ${badge.cls}">${badge.text}</span>
+          <h1 class="lms-title">${data.course.title}</h1>
+          <p class="lms-subtitle">${data.course.description || ""}</p>
+          <p>Прогресс: <strong>${data.progress.percent}%</strong> (${data.progress.completed}/${data.progress.total})</p>
+          <div class="lms-progress" style="max-width:400px"><span style="width:${data.progress.percent}%"></span></div>
+        </div>
+        <section class="lms-card">
+          <h2 style="margin-top:0">Материалы</h2>
+          <ul class="lms-material-list">${list}</ul>
+        </section>`;
+      wireLogout();
+    </script>
+  </body>
+</html>

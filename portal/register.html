@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Регистрация — MegaLife</title>
+    <link rel="stylesheet" href="/css/lms.css" />
+  </head>
+  <body class="lms-page">
+    <main class="lms-shell">
+      <div class="lms-card lms-auth-card">
+        <h1 class="lms-title">Регистрация</h1>
+        <p class="lms-subtitle">Укажите email или телефон (можно оба)</p>
+        <div id="auth-alert" class="lms-alert" hidden></div>
+        <form id="auth-form">
+          <div class="lms-field">
+            <label class="lms-label" for="name">Имя</label>
+            <input class="lms-input" id="name" name="name" required minlength="2" autocomplete="name" />
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="email">Email</label>
+            <input class="lms-input" id="email" name="email" type="email" autocomplete="email" />
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="phone">Телефон</label>
+            <input class="lms-input" id="phone" name="phone" type="tel" placeholder="+375..." autocomplete="tel" />
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="password">Пароль</label>
+            <div class="lms-password-wrap">
+              <input class="lms-input" id="password" name="password" type="password" required minlength="8" autocomplete="new-password" />
+              <button type="button" class="lms-eye-btn" data-password-toggle aria-controls="password">👁</button>
+            </div>
+            <small style="color: var(--lms-muted)">Минимум 8 символов, буква и цифра</small>
+          </div>
+          <button type="submit" class="lms-btn lms-btn-primary lms-btn-block" id="auth-submit">Создать аккаунт</button>
+        </form>
+        <p style="margin-top: 16px">Уже есть аккаунт? <a class="lms-link" href="login.html">Войти</a></p>
+      </div>
+    </main>
+    <script type="module">
+      import { api } from "/js/lms/api.js";
+      import { initAuthPage, redirectIfAuthed, getNextParam } from "/js/lms/auth-common.js";
+      await redirectIfAuthed();
+      initAuthPage({
+        async onSubmit(fd) {
+          const email = (fd.get("email") || "").trim();
+          const phone = (fd.get("phone") || "").trim();
+          if (!email && !phone) throw new Error("Укажите email или телефон.");
+          await api("/api/auth/register", {
+            method: "POST",
+            body: {
+              name: fd.get("name"),
+              email: email || undefined,
+              phone: phone || undefined,
+              password: fd.get("password"),
+            },
+          });
+          window.location.href = getNextParam();
+        },
+      });
+    </script>
+  </body>
+</html>

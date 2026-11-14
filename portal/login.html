@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вход — MegaLife</title>
+    <link rel="stylesheet" href="/css/lms.css" />
+  </head>
+  <body class="lms-page">
+    <main class="lms-shell">
+      <div class="lms-card lms-auth-card">
+        <h1 class="lms-title">Вход</h1>
+        <p class="lms-subtitle">Email или телефон и пароль</p>
+        <div id="auth-alert" class="lms-alert" hidden></div>
+        <form id="auth-form">
+          <div class="lms-field">
+            <label class="lms-label" for="identifier">Email или телефон</label>
+            <input class="lms-input" id="identifier" name="identifier" required autocomplete="username" />
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="password">Пароль</label>
+            <div class="lms-password-wrap">
+              <input class="lms-input" id="password" name="password" type="password" required autocomplete="current-password" />
+              <button type="button" class="lms-eye-btn" data-password-toggle aria-controls="password" aria-label="Показать пароль" aria-pressed="false">👁</button>
+            </div>
+          </div>
+          <button type="submit" class="lms-btn lms-btn-primary lms-btn-block" id="auth-submit">Войти</button>
+        </form>
+        <p style="margin-top: 16px">
+          <a class="lms-link" href="forgot-password.html">Забыли пароль?</a>
+        </p>
+        <p>
+          Нет аккаунта? <a class="lms-link" href="register.html">Регистрация</a>
+        </p>
+      </div>
+    </main>
+    <script type="module">
+      import { api } from "/js/lms/api.js";
+      import { initAuthPage, redirectIfAuthed, getNextParam, showAlert } from "/js/lms/auth-common.js";
+      await redirectIfAuthed();
+      initAuthPage({
+        async onSubmit(fd) {
+          await api("/api/auth/login", {
+            method: "POST",
+            body: { identifier: fd.get("identifier"), password: fd.get("password") },
+          });
+          window.location.href = getNextParam();
+        },
+      });
+    </script>
+  </body>
+</html>

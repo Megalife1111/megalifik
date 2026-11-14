@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Админ-панель — MegaLife</title>
+    <link rel="stylesheet" href="/css/lms.css" />
+  </head>
+  <body class="lms-page">
+    <main class="lms-shell" id="app">Загрузка…</main>
+    <script type="module">
+      import { api } from "/js/lms/api.js";
+      import { requireUser, renderTopbar, wireLogout } from "/js/lms/shell.js";
+
+      const user = await requireUser();
+      if (user.role !== "admin") {
+        document.getElementById("app").innerHTML =
+          '<div class="lms-card lms-alert-error">Доступ только для администратора.</div>';
+        throw new Error("forbidden");
+      }
+
+      const panel = document.createElement("div");
+      panel.className = "lms-admin-layout";
+      panel.innerHTML = `
+        <aside class="lms-card lms-admin-nav" id="admin-nav">
+          <button type="button" data-tab="users" class="active">Пользователи</button>
+          <button type="button" data-tab="progress">Прогресс</button>
+          <button type="button" data-tab="access">Заявки и доступ</button>
+          <button type="button" data-tab="courses">Курсы</button>
+        </aside>
+        <section class="lms-card" id="admin-content">…</section>`;
+
+      document.getElementById("app").innerHTML = renderTopbar(user, "admin");
+      document.getElementById("app").appendChild(panel);
+      wireLogout();
+
+      const content = document.getElementById("admin-content");
+      const nav = document.getElementById("admin-nav");
+
+      async function loadUsers() {
+        const q = document.getElementById("user-q")?.value || "";
+        const { users } = await api(`/api/admin/users?q=${encodeURIComponent(q)}`);
+        content.innerHTML = `
+          <h2 class="lms-title" style="margin-top:0">Пользователи</h2>
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <input class="lms-input" id="user-q" placeholder="Поиск" value="${q}" />
+            <button class="lms-btn lms-btn-primary" id="user-search">Найти</button>
+          </div>
+          <div class="lms-table-wrap"><table class="lms-table">
+            <thead><tr><th>Имя</th><th>Контакт</th><th>Роль</th><th>Статус</th><th></th></tr></thead>
+            <tbody>
+              ${users
+                .map(
+                  (u) => `<tr>
+                  <td>${u.name}</td>
+                  <td>${u.email || u.phone || "—"}</td>
+                  <td>${u.role}</td>
+                  <td>${u.status}</td>
+                  <td><button class="lms-btn lms-btn-ghost" data-user="${u.id}">Карточка</button></td>
+                </tr>`,
+                )
+                .join("")}
+            </tbody>
+          </table></div>`;
+        document.getElementById("user-search")?.addEventListener("click", loadUsers);
+        content.querySelectorAll("[data-user]").forEach((btn) =>
+          btn.addEventListener("click", () => openUser(btn.dataset.user)),
+        );
+      }
+
+      async function openUser(id) {
+        const data = await api(`/api/admin/users/${id}`);
+        content.innerHTML = `
+          <button class="lms-btn lms-btn-ghost" id="back-users">← К списку</button>
+          <h2>${data.user.name}</h2>
+          <p>${data.user.email || ""} ${data.user.phone || ""}</p>
+          <p>Регистрация: ${data.user.created_at}</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0">
+            <button class="lms-btn lms-btn-primary" data-role="user">Сделать user</button>
+            <button class="lms-btn lms-btn-primary" data-role="admin">Сделать admin</button>
+            <button class="lms-btn lms-btn-danger" data-status="blocked">Заблокировать</button>
+            <button class="lms-btn lms-btn-ghost" data-status="active">Разблокировать</button>
+          </div>
+          <h3>Курсы и прогресс</h3>
+          <ul class="lms-material-list">
+            ${data.courseStats
+              .map(
+                (c) => `<li class="lms-material-item">
+                  <div>${c.course.title} — ${c.progress.percent}%<br/><small>${c.access?.status || c.course.access_mode}</small></div>
+                  <button class="lms-btn lms-btn-ghost" data-grant="${c.course.id}">Открыть доступ</button>
+                </li>`,
+              )
+              .join("")}
+          </ul>`;
+        document.getElementById("back-users")?.addEventListener("click", loadUsers);
+        content.querySelectorAll("[data-role]").forEach((b) =>
+          b.addEventListener("click", async () => {
+            await api(`/api/admin/users/${id}`, { method: "PATCH", body: { role: b.dataset.role } });
+            openUser(id);
+          }),
+        );
+        content.querySelectorAll("[data-status]").forEach((b) =>
+          b.addEventListener("click", async () => {
+            await api(`/api/admin/users/${id}`, { method: "PATCH", body: { status: b.dataset.status } });
+            openUser(id);
+          }),
+        );
+        content.querySelectorAll("[data-grant]").forEach((b) =>
+          b.addEventListener("click", async () => {
+            await api("/api/admin/access", {
+              method: "POST",
+              body: { user_id: Number(id), course_id: Number(b.dataset.grant), status: "granted" },
+            });
+            openUser(id);
+          }),
+        );
+      }
+
+      async function loadProgress() {
+        const { overview } = await api("/api/admin/progress");
+        content.innerHTML = `<h2 class="lms-title" style="margin-top:0">Прогресс обучения</h2>
+          <div class="lms-table-wrap"><table class="lms-table">
+            <thead><tr><th>Ученик</th><th>Курс</th><th>%</th></tr></thead>
+            <tbody>
+            ${overview
+              .flatMap((row) =>
+                row.courses.map(
+                  (c) => `<tr>
+                    <td>${row.user.name}</td>
+                    <td>${c.course.title}</td>
+                    <td>${c.progress.percent}% (${c.progress.completed}/${c.progress.total})</td>
+                  </tr>`,
+                ),
+              )
+              .join("")}
+            </tbody>
+          </table></div>`;
+      }
+
+      async function loadAccess() {
+        const { requests } = await api("/api/admin/access-requests");
+        const { courses } = await api("/api/admin/courses");
+        const { users } = await api("/api/admin/users");
+        content.innerHTML = `
+          <h2 class="lms-title" style="margin-top:0">Заявки</h2>
+          <ul class="lms-material-list">${requests
+            .map(
+              (r) => `<li class="lms-material-item">
+                <div><strong>${r.user_name}</strong> → ${r.course_title}<br><small>${r.requested_at}</small></div>
+                <div style="display:flex;gap:6px">
+                  <button class="lms-btn lms-btn-primary" data-approve="${r.user_id}:${r.course_id}:granted">Одобрить</button>
+                  <button class="lms-btn lms-btn-ghost" data-approve="${r.user_id}:${r.course_id}:rejected">Отклонить</button>
+                </div>
+              </li>`,
+            )
+            .join("") || '<li class="lms-empty">Нет заявок</li>'}</ul>
+          <h3>Выдать доступ вручную</h3>
+          <div class="lms-field"><label class="lms-label">Пользователь</label>
+            <select class="lms-select" id="acc-user">${users.map((u) => `<option value="${u.id}">${u.name}</option>`).join("")}</select></div>
+          <div class="lms-field"><label class="lms-label">Курс</label>
+            <select class="lms-select" id="acc-course">${courses.map((c) => `<option value="${c.id}">${c.title}</option>`).join("")}</select></div>
+          <button class="lms-btn lms-btn-primary" id="acc-grant">Открыть доступ</button>
+          <button class="lms-btn lms-btn-danger" id="acc-block" style="margin-left:8px">Заблокировать</button>`;
+        content.querySelectorAll("[data-approve]").forEach((btn) =>
+          btn.addEventListener("click", async () => {
+            const [user_id, course_id, status] = btn.dataset.approve.split(":");
+            await api("/api/admin/access", {
+              method: "POST",
+              body: { user_id: Number(user_id), course_id: Number(course_id), status },
+            });
+            loadAccess();
+          }),
+        );
+        document.getElementById("acc-grant")?.addEventListener("click", async () => {
+          await api("/api/admin/access", {
+            method: "POST",
+            body: {
+              user_id: Number(document.getElementById("acc-user").value),
+              course_id: Number(document.getElementById("acc-course").value),
+              status: "granted",
+            },
+          });
+        });
+        document.getElementById("acc-block")?.addEventListener("click", async () => {
+          await api("/api/admin/access", {
+            method: "POST",
+            body: {
+              user_id: Number(document.getElementById("acc-user").value),
+              course_id: Number(document.getElementById("acc-course").value),
+              status: "blocked",
+            },
+          });
+        });
+      }
+
+      async function loadCourses() {
+        const { courses } = await api("/api/admin/courses");
+        content.innerHTML = `
+          <h2 class="lms-title" style="margin-top:0">Управление курсами</h2>
+          <button class="lms-btn lms-btn-primary" id="course-new">Новый курс</button>
+          <div class="lms-table-wrap" style="margin-top:16px"><table class="lms-table">
+            <thead><tr><th>Название</th><th>Доступ</th><th>Порядок</th><th></th></tr></thead>
+            <tbody>${courses
+              .map(
+                (c) => `<tr>
+                <td>${c.title}</td><td>${c.access_mode}</td><td>${c.sort_order}</td>
+                <td><button class="lms-btn lms-btn-ghost" data-edit-course="${c.id}">Материалы</button></td>
+              </tr>`,
+              )
+              .join("")}</tbody>
+          </table></div>`;
+        document.getElementById("course-new")?.addEventListener("click", async () => {
+          const title = prompt("Название курса");
+          const slug = prompt("Slug (латиница)", "new-course");
+          if (!title || !slug) return;
+          await api("/api/admin/courses", {
+            method: "POST",
+            body: { title, slug, access_mode: "closed" },
+          });
+          loadCourses();
+        });
+        content.querySelectorAll("[data-edit-course]").forEach((btn) =>
+          btn.addEventListener("click", () => editCourseMaterials(btn.dataset.editCourse)),
+        );
+      }
+
+      async function editCourseMaterials(courseId) {
+        const { materials } = await api(`/api/admin/courses/${courseId}/materials`);
+        content.innerHTML = `
+          <button class="lms-btn lms-btn-ghost" id="back-courses">← К курсам</button>
+          <h2>Материалы курса #${courseId}</h2>
+          <button class="lms-btn lms-btn-primary" id="mat-add">Добавить материал</button>
+          <ul class="lms-material-list" style="margin-top:16px">${materials
+            .map(
+              (m) => `<li class="lms-material-item">
+                <div>#${m.sort_order} ${m.title}<br><small>${m.content_url}</small></div>
+                <button class="lms-btn lms-btn-ghost" data-del-mat="${m.id}">Скрыть</button>
+              </li>`,
+            )
+            .join("")}</ul>`;
+        document.getElementById("back-courses")?.addEventListener("click", loadCourses);
+        document.getElementById("mat-add")?.addEventListener("click", async () => {
+          const title = prompt("Название");
+          const url = prompt("URL (например /courses/course/page1.html)");
+          if (!title || !url) return;
+          await api(`/api/admin/courses/${courseId}/materials`, {
+            method: "POST",
+            body: { title, content_url: url, sort_order: materials.length + 1 },
+          });
+          editCourseMaterials(courseId);
+        });
+        content.querySelectorAll("[data-del-mat]").forEach((b) =>
+          b.addEventListener("click", async () => {
+            await api(`/api/admin/materials/${b.dataset.delMat}`, { method: "DELETE", body: {} });
+            editCourseMaterials(courseId);
+          }),
+        );
+      }
+
+      async function switchTab(tab) {
+        nav.querySelectorAll("button").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+        content.textContent = "Загрузка…";
+        if (tab === "users") await loadUsers();
+        if (tab === "progress") await loadProgress();
+        if (tab === "access") await loadAccess();
+        if (tab === "courses") await loadCourses();
+      }
+
+      nav.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-tab]");
+        if (btn) switchTab(btn.dataset.tab);
+      });
+
+      switchTab("users");
+    </script>
+  </body>
+</html>
