@@ -13,7 +13,13 @@ export function courseCover(course) {
   return course.cover_image || COVER_FALLBACK[course.slug] || "/img/courses/plug.png";
 }
 
-function statusPill(access, canView) {
+function statusPill(access, canView, accessMode) {
+  if (!canView && access.status === "login_required" && accessMode === "open") {
+    return `<span class="lms-pill lms-pill--open" aria-label="Открытый курс">
+      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+      Открытый курс
+    </span>`;
+  }
   if (canView) {
     return `<span class="lms-pill lms-pill--open" aria-label="Доступ открыт">
       <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
@@ -36,6 +42,11 @@ function courseAction(course) {
   const { access, progress } = course;
   const arrow = `<svg class="lms-btn-arrow" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>`;
 
+  if (access.status === "login_required") {
+    const next = encodeURIComponent(`course.html?id=${course.id}`);
+    return `<a class="lms-btn lms-btn-course" href="/portal/login.html?next=${next}">Войти, чтобы начать${arrow}</a>`;
+  }
+
   if (access.canView) {
     const label = progress.completed > 0 ? "Продолжить" : "Начать";
     return `<a class="lms-btn lms-btn-course" href="course.html?id=${course.id}">${label}${arrow}</a>`;
@@ -52,7 +63,7 @@ function courseAction(course) {
 export function renderCourseTile(course) {
   const cover = courseCover(course);
   const canView = course.access.canView;
-  const locked = !canView;
+  const locked = !canView && course.access.status !== "login_required";
   const newCount = canView ? Math.max(0, course.progress.total - course.progress.completed) : 0;
   const newBadge =
     newCount > 0 ? `<span class="lms-pill lms-pill--new">${newCount} новых</span>` : "";
@@ -60,12 +71,14 @@ export function renderCourseTile(course) {
   const overlayTitle = course.title.toUpperCase();
   const progressLine = canView
     ? `${course.progress.completed} из ${course.progress.total} уроков`
-    : "—";
+    : course.access.status === "login_required" && course.progress.total
+      ? `${course.progress.total} уроков`
+      : "—";
 
   return `<article class="lms-tile ${locked ? "lms-tile--locked" : ""}">
     <div class="lms-tile-cover" style="background-image:url('${cover}')">
       <div class="lms-tile-cover__shade"></div>
-      ${statusPill(course.access, canView)}
+      ${statusPill(course.access, canView, course.access_mode)}
       ${newBadge}
       <div class="lms-tile-cover__title">${overlayTitle}</div>
     </div>

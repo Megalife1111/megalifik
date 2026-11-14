@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Мои курсы — MegaLife</title>
+    <title>Курсы — MegaLife</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -15,30 +15,42 @@
     </main>
     <script type="module">
       import { api } from "/js/lms/api.js";
-      import { requireUser, renderTopbar, wireLogout } from "/js/lms/shell.js";
+      import { getOptionalUser, renderTopbar, wireLogout } from "/js/lms/shell.js";
       import { renderCourseTile } from "/js/lms/course-ui.js";
 
-      const user = await requireUser();
-      if (!user) throw new Error("auth");
-
+      const user = await getOptionalUser();
       const { courses } = await api("/api/courses");
+
+      const guestBanner = user
+        ? ""
+        : `<div class="lms-alert lms-alert-info">Вы смотрите каталог без входа. Чтобы начать уроки и сохранять прогресс — <a class="lms-link" href="/portal/login.html?next=${encodeURIComponent("/portal/dashboard.html")}">войдите</a> или <a class="lms-link" href="/portal/register.html">зарегистрируйтесь</a>.</div>`;
+
+      const title = user ? "Мои курсы" : "Доступные курсы";
+      const subtitle = user
+        ? "Проходите материалы последовательно — прогресс сохраняется автоматически"
+        : "Войдите, чтобы открыть уроки и отслеживать прохождение";
 
       const grid =
         courses.length === 0
-          ? `<div class="lms-card lms-empty">Пока нет доступных курсов</div>`
+          ? `<div class="lms-card lms-empty">Пока нет курсов</div>`
           : `<div class="lms-course-grid">${courses.map(renderCourseTile).join("")}</div>`;
 
       document.getElementById("app").innerHTML = `
         ${renderTopbar(user)}
+        ${guestBanner}
         <div class="lms-page-head">
-          <h1 class="lms-title">Мои курсы</h1>
-          <p class="lms-subtitle lms-page-head__sub">Проходите материалы последовательно — прогресс сохраняется автоматически</p>
+          <h1 class="lms-title">${title}</h1>
+          <p class="lms-subtitle lms-page-head__sub">${subtitle}</p>
         </div>
         ${grid}`;
-      wireLogout();
+      if (user) wireLogout();
 
       document.querySelectorAll("[data-request]").forEach((btn) => {
         btn.addEventListener("click", async () => {
+          if (!user) {
+            window.location.href = `/portal/login.html?next=${encodeURIComponent(location.pathname)}`;
+            return;
+          }
           btn.disabled = true;
           try {
             await api(`/api/courses/${btn.dataset.request}/request-access`, { method: "POST", body: {} });

@@ -98,17 +98,17 @@ export function computeCourseProgress(userId, courseId) {
     .get(courseId);
   if (!courseRow) return null;
 
-  const course = { id: courseId, access_mode: courseRow.access_mode };
-  const state = getCourseAccessState(userId, course);
-  if (!state.canView) {
-    return { percent: 0, completed: 0, total: 0, accessible: false };
-  }
-
   const total = db
     .prepare(
       `SELECT COUNT(*) AS c FROM materials WHERE course_id = ? AND is_active = 1`,
     )
     .get(courseId).c;
+
+  const course = { id: courseId, access_mode: courseRow.access_mode };
+  const state = getCourseAccessState(userId, course);
+  if (!state.canView) {
+    return { percent: 0, completed: 0, total, accessible: false };
+  }
 
   const completed = db
     .prepare(

@@ -9,7 +9,8 @@ import {
 
 const router = Router();
 
-router.get("/", requireAuth, (req, res) => {
+router.get("/", (req, res) => {
+  const userId = req.session?.userId || null;
   const courses = db
     .prepare(
       `SELECT * FROM courses WHERE is_active = 1 ORDER BY sort_order, id`,
@@ -17,8 +18,8 @@ router.get("/", requireAuth, (req, res) => {
     .all();
 
   const items = courses.map((course) => {
-    const access = getCourseAccessState(req.session.userId, course);
-    const progress = computeCourseProgress(req.session.userId, course.id);
+    const access = getCourseAccessState(userId, course);
+    const progress = computeCourseProgress(userId, course.id);
     return {
       ...course,
       access,
