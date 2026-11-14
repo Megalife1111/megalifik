@@ -90,4 +90,10 @@ CREATE INDEX IF NOT EXISTS idx_login_attempts_id ON login_attempts(identifier, a
 `;
 
 db.exec(migrations);
+
+const courseCols = db.prepare(`PRAGMA table_info(courses)`).all();
+if (!courseCols.some((c) => c.name === "cover_image")) {
+  db.exec(`ALTER TABLE courses ADD COLUMN cover_image TEXT`);
+}
+
 console.log("Migrations applied.");

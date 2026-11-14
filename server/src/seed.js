@@ -11,6 +11,7 @@ const legacyCourses = [
     access_mode: "open",
     theme: "yellow",
     legacy_index_path: "/courses/course1.html",
+    cover_image: "/img/courses/course_yellow.png",
     lessonPrefix: "/courses/course/page",
     lessonCount: 12,
   },
@@ -22,6 +23,7 @@ const legacyCourses = [
     access_mode: "open",
     theme: "green",
     legacy_index_path: "/courses/course2.html",
+    cover_image: "/img/courses/course_green.png",
     lessonPrefix: "/courses/mega/page",
     lessonCount: 12,
   },
@@ -33,6 +35,7 @@ const legacyCourses = [
     access_mode: "approval",
     theme: "violet",
     legacy_index_path: "/courses/course3.html",
+    cover_image: "/img/courses/course_violet.png",
     lessonPrefix: "/courses/neiro/page",
     lessonCount: 12,
   },
@@ -44,6 +47,7 @@ const legacyCourses = [
     access_mode: "selected",
     theme: "blue",
     legacy_index_path: "/courses/course4.html",
+    cover_image: "/img/courses/course_blue.png",
     lessonPrefix: "/courses/pro/page",
     lessonCount: 12,
   },
@@ -87,15 +91,16 @@ const legacyCourses = [
 ];
 
 const insertCourse = db.prepare(`
-  INSERT INTO courses (slug, title, description, sort_order, access_mode, theme, legacy_index_path)
-  VALUES (@slug, @title, @description, @sort_order, @access_mode, @theme, @legacy_index_path)
+  INSERT INTO courses (slug, title, description, sort_order, access_mode, theme, legacy_index_path, cover_image)
+  VALUES (@slug, @title, @description, @sort_order, @access_mode, @theme, @legacy_index_path, @cover_image)
   ON CONFLICT(slug) DO UPDATE SET
     title = excluded.title,
     description = excluded.description,
     sort_order = excluded.sort_order,
     access_mode = excluded.access_mode,
     theme = excluded.theme,
-    legacy_index_path = excluded.legacy_index_path
+    legacy_index_path = excluded.legacy_index_path,
+    cover_image = excluded.cover_image
 `);
 
 const getCourseId = db.prepare(`SELECT id FROM courses WHERE slug = ?`);
@@ -117,6 +122,7 @@ for (const course of legacyCourses) {
     access_mode: course.access_mode,
     theme: course.theme || null,
     legacy_index_path: course.legacy_index_path,
+    cover_image: course.cover_image || null,
   });
   const { id: courseId } = getCourseId.get(course.slug);
   deleteMaterials.run(courseId);

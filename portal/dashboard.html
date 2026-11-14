@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Мои курсы — MegaLife</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/css/lms.css" />
   </head>
   <body class="lms-page">
@@ -12,7 +15,8 @@
     </main>
     <script type="module">
       import { api } from "/js/lms/api.js";
-      import { requireUser, renderTopbar, wireLogout, accessLabel } from "/js/lms/shell.js";
+      import { requireUser, renderTopbar, wireLogout } from "/js/lms/shell.js";
+      import { renderCourseTile } from "/js/lms/course-ui.js";
 
       const user = await requireUser();
       if (!user) throw new Error("auth");
@@ -22,30 +26,15 @@
       const grid =
         courses.length === 0
           ? `<div class="lms-card lms-empty">Пока нет доступных курсов</div>`
-          : `<div class="lms-grid">${courses
-              .map((c) => {
-                const badge = accessLabel(c.access);
-                const action = c.access.canView
-                  ? `<a class="lms-btn lms-btn-primary" href="course.html?id=${c.id}">Открыть</a>`
-                  : c.access.canRequest
-                    ? `<button type="button" class="lms-btn lms-btn-ghost" data-request="${c.id}">Запросить доступ</button>`
-                    : `<span class="lms-muted">${badge.text}</span>`;
-                return `<article class="lms-card lms-course-card">
-                    <span class="lms-badge ${badge.cls}">${badge.text}</span>
-                    <h3>${c.title}</h3>
-                    <p style="color:var(--lms-muted);margin:0">${c.description || ""}</p>
-                    <div>
-                      <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px">
-                        <span>Прогресс</span><span>${c.progress.percent}%</span>
-                      </div>
-                      <div class="lms-progress"><span style="width:${c.progress.percent}%"></span></div>
-                    </div>
-                    ${action}
-                  </article>`;
-              })
-              .join("")}</div>`;
+          : `<div class="lms-course-grid">${courses.map(renderCourseTile).join("")}</div>`;
 
-      document.getElementById("app").innerHTML = `${renderTopbar(user)}<h1 class="lms-title">Мои курсы</h1>${grid}`;
+      document.getElementById("app").innerHTML = `
+        ${renderTopbar(user)}
+        <div class="lms-page-head">
+          <h1 class="lms-title">Мои курсы</h1>
+          <p class="lms-subtitle lms-page-head__sub">Проходите материалы последовательно — прогресс сохраняется автоматически</p>
+        </div>
+        ${grid}`;
       wireLogout();
 
       document.querySelectorAll("[data-request]").forEach((btn) => {
