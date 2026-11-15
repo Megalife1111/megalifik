@@ -33,7 +33,7 @@
       const grid =
         courses.length === 0
           ? `<div class="lms-card lms-empty">Пока нет курсов</div>`
-          : `<div class="lms-course-grid">${courses.map(renderCourseTile).join("")}</div>`;
+          : `<div class="lms-banner-grid">${courses.map(renderCourseTile).join("")}</div>`;
 
       document.getElementById("app").innerHTML = `
         ${renderTopbar(user)}
