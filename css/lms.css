@@ -311,11 +311,11 @@
 
 /* ——— Баннеры-карточки курсов (3D макеты) ——— */
 .lms-banner-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--lms-gap-lg);
-  max-width: 920px;
-  margin: 0 auto;
+  width: 100%;
+  align-items: stretch;
 }
 
 .lms-banner-card {
