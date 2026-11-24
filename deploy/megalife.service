@@ -1,0 +1,17 @@
+[Unit]
+Description=MegaLife LMS (Node.js)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/megalife/server
+EnvironmentFile=/var/www/megalife/server/.env
+ExecStart=/usr/bin/node src/index.js
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

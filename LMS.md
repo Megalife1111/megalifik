@@ -61,3 +61,7 @@ npm start
 ## Сброс пароля
 
 В режиме разработки API `forgot-password` возвращает `devResetUrl`. В production подключите SMTP/SMS-отправку (заготовка — таблица `password_reset_tokens`).
+
+## Деплой на VPS
+
+См. [deploy/WHAT_TO_PROVIDE.md](deploy/WHAT_TO_PROVIDE.md) — что передать для установки, и `deploy/install.sh` для Ubuntu.
