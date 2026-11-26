@@ -13,6 +13,11 @@ import { attachSessionUser } from "./middleware/auth.js";
 import { dataDir, sqlGet, useRemoteDb } from "./db.js";
 import { LibsqlSessionStore } from "./lib/libsql-session-store.js";
 import { handleLegacyTelegramPost } from "./lib/telegram.js";
+import {
+  isProtectedLegacyPath,
+  checkLegacyPathAccess,
+  resolveLegacyFile,
+} from "./lib/legacy-static.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, "..", "..");
@@ -121,19 +126,40 @@ app.get("/api/legacy/material-by-path", async (req, res) => {
   res.json({ material: material || null });
 });
 
-if (process.env.LMS_PROTECT_LEGACY === "true" && !isVercel) {
-  app.use((req, res, next) => {
-    const protectedPrefixes = ["/courses/", "/homework/", "/english/", "/reading/"];
-    if (!protectedPrefixes.some((p) => req.path.startsWith(p))) return next();
-    if (!req.session?.userId) {
+app.get("/", (req, res) => {
+  if (req.session?.userId) {
+    return res.redirect("/portal/welcome.html");
+  }
+  return res.redirect("/portal/login.html");
+});
+
+app.use(async (req, res, next) => {
+  if (req.method !== "GET" && req.method !== "HEAD") return next();
+  if (!isProtectedLegacyPath(req.path)) return next();
+
+  const check = await checkLegacyPathAccess(req.session?.userId, req.path);
+  if (!check.allowed) {
+    if (check.reason === "login_required") {
       return res.redirect(`/portal/login.html?next=${encodeURIComponent(req.originalUrl)}`);
     }
-    return next();
-  });
-}
+    return res
+      .status(403)
+      .type("html")
+      .send(
+        `<!DOCTYPE html><html lang="ru"><meta charset="utf-8"><title>Доступ закрыт</title><body style="font-family:sans-serif;padding:2rem"><h1>Доступ пока закрыт</h1><p>Раздел откроется после подтверждения администратором.</p><p><a href="/portal/dashboard.html">Вернуться в каталог</a></p></body></html>`,
+      );
+  }
+
+  if (isVercel) {
+    const file = resolveLegacyFile(req.path);
+    if (file) return res.sendFile(file);
+    return res.status(404).send("Not found");
+  }
+  return next();
+});
 
 if (!isVercel) {
-  app.use(express.static(rootDir, { index: ["index.html"] }));
+  app.use(express.static(rootDir, { index: false }));
 }
 
 export default app;

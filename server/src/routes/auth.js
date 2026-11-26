@@ -3,12 +3,8 @@ import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
 import crypto from "crypto";
 import { sqlGet, sqlRun } from "../db.js";
-import {
-  normalizeEmail,
-  normalizePhone,
-  validatePassword,
-  parseLoginIdentifier,
-} from "../lib/validation.js";
+import { normalizeEmail, validatePassword, parseLoginIdentifier } from "../lib/validation.js";
+import { validateRegistration } from "../lib/register-validation.js";
 import {
   recordLoginAttempt,
   isLoginBlocked,
@@ -30,15 +26,21 @@ function setUserSession(req, user) {
   req.session.userStatus = user.status;
 }
 
-function publicUser(user) {
+async function publicUser(user) {
+  const child = await sqlGet(`SELECT first_name, last_name, age, grade FROM children WHERE user_id = ?`, [
+    user.id,
+  ]);
   return {
     id: user.id,
     name: user.name,
+    parent_first_name: user.parent_first_name,
+    parent_last_name: user.parent_last_name,
     email: user.email,
     phone: user.phone,
     role: user.role,
     status: user.status,
     created_at: user.created_at,
+    child: child || null,
   };
 }
 
@@ -50,75 +52,70 @@ router.get("/csrf", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { name, password, email: rawEmail, phone: rawPhone } = req.body || {};
-  const email = rawEmail ? normalizeEmail(rawEmail) : null;
-  const phone = rawPhone ? normalizePhone(rawPhone) : null;
+  const validated = validateRegistration(req.body || {});
+  if (!validated.ok) {
+    return res.status(400).json({ error: "Проверьте поля формы.", errors: validated.errors });
+  }
+  const d = validated.data;
 
-  if (!name || typeof name !== "string" || name.trim().length < 2) {
-    return res.status(400).json({ error: "Укажите имя (минимум 2 символа)." });
+  const emailTaken = await sqlGet(`SELECT id FROM users WHERE email = ?`, [d.email]);
+  if (emailTaken) {
+    return res.status(409).json({
+      error: "Этот email уже зарегистрирован.",
+      errors: { email: "Этот email уже зарегистрирован." },
+    });
   }
-  if (!email && !phone) {
-    return res.status(400).json({ error: "Укажите email или телефон." });
-  }
-  if (rawEmail && !email) {
-    return res.status(400).json({ error: "Некорректный email." });
-  }
-  if (rawPhone && !phone) {
-    return res.status(400).json({ error: "Некорректный номер телефона." });
-  }
-  const passErr = validatePassword(password);
-  if (passErr) return res.status(400).json({ error: passErr });
-
-  if (email) {
-    const exists = await sqlGet(`SELECT id FROM users WHERE email = ?`, [email]);
-    if (exists) return res.status(409).json({ error: "Этот email уже зарегистрирован." });
-  }
-  if (phone) {
-    const exists = await sqlGet(`SELECT id FROM users WHERE phone = ?`, [phone]);
-    if (exists) return res.status(409).json({ error: "Этот телефон уже зарегистрирован." });
+  const phoneTaken = await sqlGet(`SELECT id FROM users WHERE phone = ?`, [d.phone]);
+  if (phoneTaken) {
+    return res.status(409).json({
+      error: "Этот телефон уже зарегистрирован.",
+      errors: { phone: "Этот телефон уже зарегистрирован." },
+    });
   }
 
-  const password_hash = bcrypt.hashSync(password, 12);
+  const password_hash = bcrypt.hashSync(d.password, 12);
   const result = await sqlRun(
-    `INSERT INTO users (email, phone, name, password_hash) VALUES (?, ?, ?, ?)`,
-    [email, phone, name.trim(), password_hash],
+    `INSERT INTO users (email, phone, name, parent_first_name, parent_last_name, password_hash)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [d.email, d.phone, d.name, d.parent_first_name, d.parent_last_name, password_hash],
+  );
+  const userId = result.lastInsertRowid;
+  await sqlRun(
+    `INSERT INTO children (user_id, first_name, last_name, age, grade) VALUES (?, ?, ?, ?, ?)`,
+    [userId, d.child_first_name, d.child_last_name, d.child_age, d.child_grade],
   );
 
-  const user = await sqlGet(`SELECT * FROM users WHERE id = ?`, [result.lastInsertRowid]);
+  const user = await sqlGet(`SELECT * FROM users WHERE id = ?`, [userId]);
   setUserSession(req, user);
-  res.status(201).json({ user: publicUser(user) });
+  res.status(201).json({ user: await publicUser(user), redirect: "/portal/welcome.html" });
 });
 
 router.post("/login", async (req, res) => {
-  const { identifier, password } = req.body || {};
-  const parsed = parseLoginIdentifier(identifier);
-  if (parsed.error) return res.status(400).json({ error: parsed.error });
+  const { password, email: rawEmail, identifier } = req.body || {};
+  const email = normalizeEmail(rawEmail || identifier);
+  if (!email) {
+    return res.status(400).json({ error: "Укажите корректный email." });
+  }
 
-  const key = parsed.email || parsed.phone;
-  if (await isLoginBlocked(key)) {
+  if (await isLoginBlocked(email)) {
     return res.status(429).json({
       error: "Слишком много попыток входа. Попробуйте позже.",
     });
   }
 
-  let user = null;
-  if (parsed.email) {
-    user = await sqlGet(`SELECT * FROM users WHERE email = ?`, [parsed.email]);
-  } else {
-    user = await sqlGet(`SELECT * FROM users WHERE phone = ?`, [parsed.phone]);
-  }
+  const user = await sqlGet(`SELECT * FROM users WHERE email = ?`, [email]);
 
   if (!user || !bcrypt.compareSync(password || "", user.password_hash)) {
-    await recordLoginAttempt(key);
-    return res.status(401).json({ error: "Неверный логин или пароль." });
+    await recordLoginAttempt(email);
+    return res.status(401).json({ error: "Неверный email или пароль." });
   }
   if (user.status === "blocked") {
     return res.status(403).json({ error: "Аккаунт заблокирован." });
   }
 
-  await clearLoginAttempts(key);
+  await clearLoginAttempts(email);
   setUserSession(req, user);
-  res.json({ user: publicUser(user) });
+  res.json({ user: await publicUser(user), redirect: "/portal/welcome.html" });
 });
 
 router.post("/logout", requireAuth, (req, res) => {
@@ -139,7 +136,7 @@ router.get("/me", async (req, res) => {
     return res.json({ user: null });
   }
   setUserSession(req, user);
-  res.json({ user: publicUser(user) });
+  res.json({ user: await publicUser(user) });
 });
 
 router.post("/forgot-password", async (req, res) => {

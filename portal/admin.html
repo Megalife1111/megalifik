@@ -43,7 +43,7 @@
         content.innerHTML = `
           <h2 class="lms-title" style="margin-top:0">Пользователи</h2>
           <div style="display:flex;gap:8px;margin-bottom:16px">
-            <input class="lms-input" id="user-q" placeholder="Поиск" value="${q}" />
+            <input class="lms-input" id="user-q" placeholder="Имя, email, телефон, ребёнок" value="${q}" />
             <button class="lms-btn lms-btn-primary" id="user-search">Найти</button>
           </div>
           <div class="lms-table-wrap"><table class="lms-table">
@@ -68,12 +68,27 @@
         );
       }
 
+      const PAID_SLUGS = new Set(["prochtivo", "megachtivo", "neurochtivo"]);
+
+      function accessLine(c) {
+        if (c.course.slug === "chtivo" || c.course.access_mode === "open") return "открыт";
+        if (PAID_SLUGS.has(c.course.slug)) {
+          return c.access?.status === "granted" ? "открыт (админ)" : "закрыт";
+        }
+        return c.access?.status || c.course.access_mode;
+      }
+
       async function openUser(id) {
         const data = await api(`/api/admin/users/${id}`);
+        const child = data.child;
+        const childBlock = child
+          ? `<p><strong>Ребёнок:</strong> ${child.first_name} ${child.last_name}, ${child.age} лет, класс ${child.grade}</p>`
+          : `<p><em>Данные ребёнка не указаны (аккаунт до обновления регистрации)</em></p>`;
         content.innerHTML = `
           <button class="lms-btn lms-btn-ghost" id="back-users">← К списку</button>
           <h2>${data.user.name}</h2>
           <p>${data.user.email || ""} ${data.user.phone || ""}</p>
+          ${childBlock}
           <p>Регистрация: ${data.user.created_at}</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0">
             <button class="lms-btn lms-btn-primary" data-role="user">Сделать user</button>
@@ -84,12 +99,22 @@
           <h3>Курсы и прогресс</h3>
           <ul class="lms-material-list">
             ${data.courseStats
-              .map(
-                (c) => `<li class="lms-material-item">
-                  <div>${c.course.title} — ${c.progress.percent}%<br/><small>${c.access?.status || c.course.access_mode}</small></div>
-                  <button class="lms-btn lms-btn-ghost" data-grant="${c.course.id}">Открыть доступ</button>
-                </li>`,
-              )
+              .map((c) => {
+                const paid = PAID_SLUGS.has(c.course.slug);
+                const granted = c.access?.status === "granted";
+                const actions = paid
+                  ? `<button class="lms-btn lms-btn-ghost" data-grant="${c.course.id}">Открыть</button>
+                     <button class="lms-btn lms-btn-danger" data-block-course="${c.course.id}">Закрыть</button>`
+                  : "";
+                const resetBtn =
+                  c.progress.completed > 0
+                    ? `<button class="lms-btn lms-btn-ghost" data-reset-course="${c.course.id}">Сбросить прогресс</button>`
+                    : "";
+                return `<li class="lms-material-item">
+                  <div>${c.course.title} — ${c.progress.percent}% (${c.progress.completed}/${c.progress.total})<br/><small>Доступ: ${accessLine(c)}</small></div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">${actions}${resetBtn}</div>
+                </li>`;
+              })
               .join("")}
           </ul>`;
         document.getElementById("back-users")?.addEventListener("click", loadUsers);
@@ -107,9 +132,30 @@
         );
         content.querySelectorAll("[data-grant]").forEach((b) =>
           b.addEventListener("click", async () => {
+            if (!confirm("Открыть доступ к этому курсу?")) return;
             await api("/api/admin/access", {
               method: "POST",
               body: { user_id: Number(id), course_id: Number(b.dataset.grant), status: "granted" },
+            });
+            openUser(id);
+          }),
+        );
+        content.querySelectorAll("[data-block-course]").forEach((b) =>
+          b.addEventListener("click", async () => {
+            if (!confirm("Закрыть доступ к этому курсу?")) return;
+            await api("/api/admin/access", {
+              method: "POST",
+              body: { user_id: Number(id), course_id: Number(b.dataset.blockCourse), status: "blocked" },
+            });
+            openUser(id);
+          }),
+        );
+        content.querySelectorAll("[data-reset-course]").forEach((b) =>
+          b.addEventListener("click", async () => {
+            if (!confirm("Сбросить прогресс по этому курсу?")) return;
+            await api(`/api/admin/users/${id}/progress?course_id=${b.dataset.resetCourse}`, {
+              method: "DELETE",
+              body: {},
             });
             openUser(id);
           }),

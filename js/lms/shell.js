@@ -36,7 +36,6 @@ export function renderTopbar(user, active = "courses") {
       </a>
       <nav class="lms-nav">
         <a class="lms-btn lms-btn-ghost" href="/portal/dashboard.html">Курсы</a>
-        <a class="lms-btn lms-btn-ghost" href="/">Старая главная</a>
         ${adminLink}
         ${authBlock}
       </nav>

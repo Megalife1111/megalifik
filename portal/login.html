@@ -10,12 +10,13 @@
     <main class="lms-shell">
       <div class="lms-card lms-auth-card">
         <h1 class="lms-title">Вход</h1>
-        <p class="lms-subtitle">Email или телефон и пароль</p>
+        <p class="lms-subtitle">Войдите с email и паролем</p>
         <div id="auth-alert" class="lms-alert" hidden></div>
         <form id="auth-form">
           <div class="lms-field">
-            <label class="lms-label" for="identifier">Email или телефон</label>
-            <input class="lms-input" id="identifier" name="identifier" required autocomplete="username" />
+            <label class="lms-label" for="email">Email</label>
+            <input class="lms-input" id="email" name="email" type="email" required autocomplete="email" />
+            <small class="lms-field-error" data-field-error="email" hidden></small>
           </div>
           <div class="lms-field">
             <label class="lms-label" for="password">Пароль</label>
@@ -36,15 +37,15 @@
     </main>
     <script type="module">
       import { api } from "/js/lms/api.js";
-      import { initAuthPage, redirectIfAuthed, getNextParam, showAlert } from "/js/lms/auth-common.js";
+      import { initAuthPage, redirectIfAuthed, afterAuthRedirect } from "/js/lms/auth-common.js";
       await redirectIfAuthed();
       initAuthPage({
         async onSubmit(fd) {
           await api("/api/auth/login", {
             method: "POST",
-            body: { identifier: fd.get("identifier"), password: fd.get("password") },
+            body: { email: fd.get("email"), password: fd.get("password") },
           });
-          window.location.href = getNextParam();
+          afterAuthRedirect();
         },
       });
     </script>

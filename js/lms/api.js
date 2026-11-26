@@ -26,6 +26,7 @@ export async function api(path, options = {}) {
     const err = new Error(data.error || "Ошибка запроса");
     err.status = res.status;
     err.data = data;
+    err.errors = data.errors;
     throw err;
   }
   return data;

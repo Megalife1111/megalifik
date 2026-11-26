@@ -12,9 +12,17 @@ router.get("/users", async (req, res) => {
   const params = [];
 
   if (q) {
-    sql += ` AND (name LIKE ? OR email LIKE ? OR phone LIKE ?)`;
+    sql += ` AND (
+      name LIKE ? OR email LIKE ? OR phone LIKE ?
+      OR parent_first_name LIKE ? OR parent_last_name LIKE ?
+      OR EXISTS (
+        SELECT 1 FROM children ch
+        WHERE ch.user_id = users.id
+          AND (ch.first_name LIKE ? OR ch.last_name LIKE ?)
+      )
+    )`;
     const like = `%${q}%`;
-    params.push(like, like, like);
+    params.push(like, like, like, like, like, like, like);
   }
   if (status) {
     sql += ` AND status = ?`;
@@ -49,6 +57,11 @@ router.get("/users/:id", async (req, res) => {
     }),
   );
 
+  const child = await sqlGet(
+    `SELECT first_name, last_name, age, grade, updated_at FROM children WHERE user_id = ?`,
+    [user.id],
+  );
+
   const lastProgress = await sqlGet(
     `SELECT p.*, m.title AS material_title, c.title AS course_title
      FROM material_progress p
@@ -59,7 +72,25 @@ router.get("/users/:id", async (req, res) => {
     [user.id],
   );
 
-  res.json({ user, courseStats, lastProgress });
+  res.json({ user, child, courseStats, lastProgress });
+});
+
+router.delete("/users/:id/progress", async (req, res) => {
+  const userId = Number(req.params.id);
+  const courseId = Number(req.query.course_id);
+  if (!userId || !courseId) {
+    return res.status(400).json({ error: "Укажите course_id." });
+  }
+  const user = await sqlGet(`SELECT id FROM users WHERE id = ?`, [userId]);
+  if (!user) return res.status(404).json({ error: "Пользователь не найден." });
+  await sqlRun(
+    `DELETE FROM material_progress
+     WHERE user_id = ? AND material_id IN (
+       SELECT id FROM materials WHERE course_id = ?
+     )`,
+    [userId, courseId],
+  );
+  res.json({ ok: true });
 });
 
 router.patch("/users/:id", async (req, res) => {

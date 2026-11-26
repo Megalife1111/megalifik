@@ -8,22 +8,31 @@
   </head>
   <body class="lms-page">
     <main class="lms-shell">
-      <div class="lms-card lms-auth-card">
+      <div class="lms-card lms-auth-card" style="max-width: 520px">
         <h1 class="lms-title">Регистрация</h1>
-        <p class="lms-subtitle">Укажите email или телефон (можно оба)</p>
+        <p class="lms-subtitle">Для входа используется email</p>
         <div id="auth-alert" class="lms-alert" hidden></div>
         <form id="auth-form">
+          <p class="lms-label" style="margin-bottom: 8px; font-weight: 600">Родитель</p>
           <div class="lms-field">
-            <label class="lms-label" for="name">Имя</label>
-            <input class="lms-input" id="name" name="name" required minlength="2" autocomplete="name" />
+            <label class="lms-label" for="parent_first_name">Имя</label>
+            <input class="lms-input" id="parent_first_name" name="parent_first_name" required minlength="2" autocomplete="given-name" />
+            <small class="lms-field-error" data-field-error="parent_first_name" hidden></small>
           </div>
           <div class="lms-field">
-            <label class="lms-label" for="email">Email</label>
-            <input class="lms-input" id="email" name="email" type="email" autocomplete="email" />
+            <label class="lms-label" for="parent_last_name">Фамилия</label>
+            <input class="lms-input" id="parent_last_name" name="parent_last_name" required minlength="2" autocomplete="family-name" />
+            <small class="lms-field-error" data-field-error="parent_last_name" hidden></small>
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="email">Email (логин)</label>
+            <input class="lms-input" id="email" name="email" type="email" required autocomplete="email" />
+            <small class="lms-field-error" data-field-error="email" hidden></small>
           </div>
           <div class="lms-field">
             <label class="lms-label" for="phone">Телефон</label>
-            <input class="lms-input" id="phone" name="phone" type="tel" placeholder="+375..." autocomplete="tel" />
+            <input class="lms-input" id="phone" name="phone" type="tel" required placeholder="+375..." autocomplete="tel" />
+            <small class="lms-field-error" data-field-error="phone" hidden></small>
           </div>
           <div class="lms-field">
             <label class="lms-label" for="password">Пароль</label>
@@ -31,8 +40,40 @@
               <input class="lms-input" id="password" name="password" type="password" required minlength="8" autocomplete="new-password" />
               <button type="button" class="lms-eye-btn" data-password-toggle aria-controls="password">👁</button>
             </div>
+            <small class="lms-field-error" data-field-error="password" hidden></small>
             <small style="color: var(--lms-muted)">Минимум 8 символов, буква и цифра</small>
           </div>
+          <div class="lms-field">
+            <label class="lms-label" for="password_confirm">Подтверждение пароля</label>
+            <div class="lms-password-wrap">
+              <input class="lms-input" id="password_confirm" name="password_confirm" type="password" required autocomplete="new-password" />
+              <button type="button" class="lms-eye-btn" data-password-toggle aria-controls="password_confirm">👁</button>
+            </div>
+            <small class="lms-field-error" data-field-error="password_confirm" hidden></small>
+          </div>
+
+          <p class="lms-label" style="margin: 20px 0 8px; font-weight: 600">Ребёнок</p>
+          <div class="lms-field">
+            <label class="lms-label" for="child_first_name">Имя</label>
+            <input class="lms-input" id="child_first_name" name="child_first_name" required minlength="2" />
+            <small class="lms-field-error" data-field-error="child_first_name" hidden></small>
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="child_last_name">Фамилия</label>
+            <input class="lms-input" id="child_last_name" name="child_last_name" required minlength="2" />
+            <small class="lms-field-error" data-field-error="child_last_name" hidden></small>
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="child_age">Возраст</label>
+            <input class="lms-input" id="child_age" name="child_age" type="number" min="3" max="25" required />
+            <small class="lms-field-error" data-field-error="child_age" hidden></small>
+          </div>
+          <div class="lms-field">
+            <label class="lms-label" for="child_grade">Класс</label>
+            <input class="lms-input" id="child_grade" name="child_grade" required placeholder="например, 3 или 3А" />
+            <small class="lms-field-error" data-field-error="child_grade" hidden></small>
+          </div>
+
           <button type="submit" class="lms-btn lms-btn-primary lms-btn-block" id="auth-submit">Создать аккаунт</button>
         </form>
         <p style="margin-top: 16px">Уже есть аккаунт? <a class="lms-link" href="login.html">Войти</a></p>
@@ -40,23 +81,15 @@
     </main>
     <script type="module">
       import { api } from "/js/lms/api.js";
-      import { initAuthPage, redirectIfAuthed, getNextParam } from "/js/lms/auth-common.js";
+      import { initAuthPage, redirectIfAuthed, afterAuthRedirect } from "/js/lms/auth-common.js";
+
       await redirectIfAuthed();
       initAuthPage({
         async onSubmit(fd) {
-          const email = (fd.get("email") || "").trim();
-          const phone = (fd.get("phone") || "").trim();
-          if (!email && !phone) throw new Error("Укажите email или телефон.");
-          await api("/api/auth/register", {
-            method: "POST",
-            body: {
-              name: fd.get("name"),
-              email: email || undefined,
-              phone: phone || undefined,
-              password: fd.get("password"),
-            },
-          });
-          window.location.href = getNextParam();
+          const body = Object.fromEntries(fd.entries());
+          body.child_age = body.child_age ? Number(body.child_age) : undefined;
+          await api("/api/auth/register", { method: "POST", body });
+          afterAuthRedirect();
         },
       });
     </script>

@@ -32,6 +32,9 @@ function statusPill(access, canView, accessMode) {
   if (access.status === "pending") {
     return `<span class="lms-pill lms-pill--wait">На рассмотрении</span>`;
   }
+  if (access.status === "no_access" || access.status === "blocked") {
+    return `<span class="lms-pill lms-pill--lock">Доступ пока закрыт</span>`;
+  }
   return `<span class="lms-pill lms-pill--lock">Скоро будет доступно</span>`;
 }
 

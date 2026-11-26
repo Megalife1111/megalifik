@@ -96,6 +96,36 @@ async function main() {
   if (!courseCols.some((c) => c.name === "cover_image")) {
     await sqlExec(`ALTER TABLE courses ADD COLUMN cover_image TEXT`);
   }
+
+  await sqlExec(`
+CREATE TABLE IF NOT EXISTS children (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  age INTEGER,
+  grade TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_children_user ON children(user_id);
+`);
+
+  const userCols = await sqlAll(`PRAGMA table_info(users)`);
+  if (!userCols.some((c) => c.name === "parent_first_name")) {
+    await sqlExec(`ALTER TABLE users ADD COLUMN parent_first_name TEXT`);
+  }
+  if (!userCols.some((c) => c.name === "parent_last_name")) {
+    await sqlExec(`ALTER TABLE users ADD COLUMN parent_last_name TEXT`);
+  }
+
+  await sqlExec(`
+    UPDATE courses SET access_mode = 'selected'
+    WHERE slug IN ('megachtivo', 'neurochtivo', 'prochtivo');
+    UPDATE users SET parent_first_name = COALESCE(parent_first_name, name)
+    WHERE parent_first_name IS NULL AND name IS NOT NULL;
+  `);
+
   console.log("Migrations applied.");
 }
 

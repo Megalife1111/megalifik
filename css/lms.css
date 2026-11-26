@@ -35,6 +35,17 @@
   );
 }
 
+.lms-field-error {
+  display: block;
+  color: var(--lms-danger);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.lms-input.is-invalid {
+  border-color: var(--lms-danger);
+}
+
 .lms-page {
   min-height: 100vh;
   background: var(--lms-page-gradient);
