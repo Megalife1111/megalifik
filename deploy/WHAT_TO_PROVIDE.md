@@ -7,7 +7,7 @@
 
 ```bash
 sudo apt install -y git
-git clone https://github.com/ycarcapital-create/megalife.git /var/www/megalife
+git clone https://github.com/Megalife1111/megalifik.git /var/www/megalife
 cd /var/www/megalife
 # заполните server/.env по deploy/env.example
 sudo bash deploy/install.sh
@@ -50,7 +50,7 @@ sudo bash deploy/install.sh
 
 | Вариант |
 |---------|
-| Публичный/доступный `ycarcapital-create/megalife` — клон с GitHub |
+| Публичный репозиторий `Megalife1111/megalifik` — клон с GitHub |
 | Или **ваш форк** + deploy key / SSH deploy |
 
 ### 5. Опционально

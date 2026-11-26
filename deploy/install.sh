@@ -3,7 +3,7 @@
 set -euo pipefail
 
 APP_DIR="${APP_DIR:-/var/www/megalife}"
-REPO_URL="${REPO_URL:-https://github.com/ycarcapital-create/megalife.git}"
+REPO_URL="${REPO_URL:-https://github.com/Megalife1111/megalifik.git}"
 NODE_MAJOR="${NODE_MAJOR:-20}"
 
 if [[ "${EUID:-}" -ne 0 ]]; then
