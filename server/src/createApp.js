@@ -30,13 +30,21 @@ app.use(cookieParser());
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
-const sessionStore = useRemoteDb()
-  ? new LibsqlSessionStore()
-  : await (async () => {
-      const connectSqlite3 = (await import("connect-sqlite3")).default;
-      const SQLiteStore = connectSqlite3(session);
-      return new SQLiteStore({ dir: dataDir, db: "sessions.sqlite" });
-    })();
+let sessionStore;
+if (isVercel || useRemoteDb()) {
+  if (!process.env.TURSO_DATABASE_URL) {
+    throw new Error(
+      "На Vercel нужны TURSO_DATABASE_URL и TURSO_AUTH_TOKEN (Settings → Environment Variables).",
+    );
+  }
+  sessionStore = new LibsqlSessionStore();
+} else {
+  sessionStore = await (async () => {
+    const connectSqlite3 = (await import("connect-sqlite3")).default;
+    const SQLiteStore = connectSqlite3(session);
+    return new SQLiteStore({ dir: dataDir, db: "sessions.sqlite" });
+  })();
+}
 
 const sessionMiddleware = session({
   store: sessionStore,

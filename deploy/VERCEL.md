@@ -1,6 +1,6 @@
 # Деплой на Vercel
 
-Статика (HTML, CSS, JS, картинки) отдаётся CDN Vercel. API и Telegram — serverless-функция `api/[...path].js` (Express).
+Статика (HTML, CSS, JS, картинки) отдаётся CDN Vercel. API и Telegram — serverless-функция `api/index.js` (Express), rewrite `/api/*` → `/api`.
 
 **Install на Vercel:** в корне лежит `.npmrc` (`omit=dev`), чтобы даже при `npm install` не собирался нативный `better-sqlite3` (локальный SQLite только для dev). В `vercel.json` задано `npm ci --omit=dev`. Если в Vercel → **Settings → Build** переопределён Install Command, оставьте `npm ci --omit=dev` или пусто (сработает `.npmrc`).
 
