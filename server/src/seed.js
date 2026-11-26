@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
-import { db } from "./db.js";
-import "./migrate.js";
+import { initDb, sqlGet, sqlRun } from "./db.js";
 
 const banner = (slug) => `/img/lms-banners/${slug}.jpg`;
 
@@ -205,66 +204,72 @@ const legacyCourses = [
   },
 ];
 
-const insertCourse = db.prepare(`
-  INSERT INTO courses (slug, title, description, sort_order, access_mode, theme, legacy_index_path, cover_image)
-  VALUES (@slug, @title, @description, @sort_order, @access_mode, @theme, @legacy_index_path, @cover_image)
-  ON CONFLICT(slug) DO UPDATE SET
-    title = excluded.title,
-    description = excluded.description,
-    sort_order = excluded.sort_order,
-    access_mode = excluded.access_mode,
-    theme = excluded.theme,
-    legacy_index_path = excluded.legacy_index_path,
-    cover_image = excluded.cover_image
-`);
+async function seed() {
+  await initDb();
 
-const getCourseId = db.prepare(`SELECT id FROM courses WHERE id IS NOT NULL AND slug = ?`);
+  for (const course of legacyCourses) {
+    await sqlRun(
+      `INSERT INTO courses (slug, title, description, sort_order, access_mode, theme, legacy_index_path, cover_image)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(slug) DO UPDATE SET
+         title = excluded.title,
+         description = excluded.description,
+         sort_order = excluded.sort_order,
+         access_mode = excluded.access_mode,
+         theme = excluded.theme,
+         legacy_index_path = excluded.legacy_index_path,
+         cover_image = excluded.cover_image`,
+      [
+        course.slug,
+        course.title,
+        course.description || null,
+        course.sort_order,
+        course.access_mode,
+        course.theme || null,
+        course.legacy_index_path,
+        course.cover_image || null,
+      ],
+    );
+    const row = await sqlGet(`SELECT id FROM courses WHERE slug = ?`, [course.slug]);
+    const courseId = row.id;
+    await sqlRun(`DELETE FROM materials WHERE course_id = ?`, [courseId]);
 
-const deleteMaterials = db.prepare(`DELETE FROM materials WHERE course_id = ?`);
-
-for (const course of legacyCourses) {
-  insertCourse.run({
-    slug: course.slug,
-    title: course.title,
-    description: course.description || null,
-    sort_order: course.sort_order,
-    access_mode: course.access_mode,
-    theme: course.theme || null,
-    legacy_index_path: course.legacy_index_path,
-    cover_image: course.cover_image || null,
-  });
-  const row = getCourseId.get(course.slug);
-  const courseId = row.id;
-  deleteMaterials.run(courseId);
-
-  if (course.lessonCount) {
-    const ins = db.prepare(`
-      INSERT INTO materials (course_id, title, sort_order, content_url, content_type)
-      VALUES (?, ?, ?, ?, 'legacy_html')
-    `);
-    for (let i = 1; i <= course.lessonCount; i++) {
-      ins.run(courseId, `Занятие ${i}`, i, `${course.lessonPrefix}${i}.html`);
+    if (course.lessonCount) {
+      for (let i = 1; i <= course.lessonCount; i++) {
+        await sqlRun(
+          `INSERT INTO materials (course_id, title, sort_order, content_url, content_type)
+           VALUES (?, ?, ?, ?, 'legacy_html')`,
+          [courseId, `Занятие ${i}`, i, `${course.lessonPrefix}${i}.html`],
+        );
+      }
+    } else if (course.materials) {
+      for (let idx = 0; idx < course.materials.length; idx++) {
+        const m = course.materials[idx];
+        await sqlRun(
+          `INSERT INTO materials (course_id, title, sort_order, content_url, content_type)
+           VALUES (?, ?, ?, ?, 'legacy_html')`,
+          [courseId, m.title, idx + 1, m.url],
+        );
+      }
     }
-  } else if (course.materials) {
-    const ins = db.prepare(`
-      INSERT INTO materials (course_id, title, sort_order, content_url, content_type)
-      VALUES (?, ?, ?, ?, 'legacy_html')
-    `);
-    course.materials.forEach((m, idx) => {
-      ins.run(courseId, m.title, idx + 1, m.url);
-    });
   }
+
+  const adminEmail = process.env.LMS_ADMIN_EMAIL || "admin@megalife.local";
+  const adminPassword = process.env.LMS_ADMIN_PASSWORD || "Admin12345";
+  const adminHash = bcrypt.hashSync(adminPassword, 12);
+
+  await sqlRun(
+    `INSERT INTO users (email, name, password_hash, role)
+     VALUES (?, 'Администратор', ?, 'admin')
+     ON CONFLICT(email) DO UPDATE SET password_hash = excluded.password_hash, role = 'admin'`,
+    [adminEmail, adminHash],
+  );
+
+  console.log("Seed complete.");
+  console.log(`Admin: ${adminEmail} / ${adminPassword}`);
 }
 
-const adminEmail = process.env.LMS_ADMIN_EMAIL || "admin@megalife.local";
-const adminPassword = process.env.LMS_ADMIN_PASSWORD || "Admin12345";
-const adminHash = bcrypt.hashSync(adminPassword, 12);
-
-db.prepare(
-  `INSERT INTO users (email, name, password_hash, role)
-   VALUES (?, 'Администратор', ?, 'admin')
-   ON CONFLICT(email) DO UPDATE SET password_hash = excluded.password_hash, role = 'admin'`,
-).run(adminEmail, adminHash);
-
-console.log("Seed complete.");
-console.log(`Admin: ${adminEmail} / ${adminPassword}`);
+seed().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

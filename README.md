@@ -8,10 +8,14 @@
 
 См. [LMS.md](./LMS.md) — локальный запуск, админ, переменные окружения.
 
-## Деплой на VPS (Ubuntu)
+## Деплой
+
+**Vercel (рекомендуется для старта):** [deploy/VERCEL.md](./deploy/VERCEL.md) — Turso + env, без VPS.
+
+**VPS (Ubuntu):**
 
 ```bash
 sudo bash deploy/install.sh
 ```
 
-Подробный чеклист: [deploy/WHAT_TO_PROVIDE.md](./deploy/WHAT_TO_PROVIDE.md).
+Чеклист: [deploy/WHAT_TO_PROVIDE.md](./deploy/WHAT_TO_PROVIDE.md).

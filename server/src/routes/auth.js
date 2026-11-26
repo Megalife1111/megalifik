@@ -2,7 +2,7 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
 import crypto from "crypto";
-import { db } from "../db.js";
+import { sqlGet, sqlRun } from "../db.js";
 import {
   normalizeEmail,
   normalizePhone,
@@ -17,6 +17,7 @@ import {
 import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
+const SESSION_COOKIE = "megalife.sid";
 
 function hashToken(token) {
   return crypto.createHash("sha256").update(token).digest("hex");
@@ -48,7 +49,7 @@ router.get("/csrf", (req, res) => {
   res.json({ csrfToken: req.session.csrfToken });
 });
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
   const { name, password, email: rawEmail, phone: rawPhone } = req.body || {};
   const email = rawEmail ? normalizeEmail(rawEmail) : null;
   const phone = rawPhone ? normalizePhone(rawPhone) : null;
@@ -69,33 +70,32 @@ router.post("/register", (req, res) => {
   if (passErr) return res.status(400).json({ error: passErr });
 
   if (email) {
-    const exists = db.prepare(`SELECT id FROM users WHERE email = ?`).get(email);
+    const exists = await sqlGet(`SELECT id FROM users WHERE email = ?`, [email]);
     if (exists) return res.status(409).json({ error: "Этот email уже зарегистрирован." });
   }
   if (phone) {
-    const exists = db.prepare(`SELECT id FROM users WHERE phone = ?`).get(phone);
+    const exists = await sqlGet(`SELECT id FROM users WHERE phone = ?`, [phone]);
     if (exists) return res.status(409).json({ error: "Этот телефон уже зарегистрирован." });
   }
 
   const password_hash = bcrypt.hashSync(password, 12);
-  const result = db
-    .prepare(
-      `INSERT INTO users (email, phone, name, password_hash) VALUES (?, ?, ?, ?)`,
-    )
-    .run(email, phone, name.trim(), password_hash);
+  const result = await sqlRun(
+    `INSERT INTO users (email, phone, name, password_hash) VALUES (?, ?, ?, ?)`,
+    [email, phone, name.trim(), password_hash],
+  );
 
-  const user = db.prepare(`SELECT * FROM users WHERE id = ?`).get(result.lastInsertRowid);
+  const user = await sqlGet(`SELECT * FROM users WHERE id = ?`, [result.lastInsertRowid]);
   setUserSession(req, user);
   res.status(201).json({ user: publicUser(user) });
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const { identifier, password } = req.body || {};
   const parsed = parseLoginIdentifier(identifier);
   if (parsed.error) return res.status(400).json({ error: parsed.error });
 
   const key = parsed.email || parsed.phone;
-  if (isLoginBlocked(key)) {
+  if (await isLoginBlocked(key)) {
     return res.status(429).json({
       error: "Слишком много попыток входа. Попробуйте позже.",
     });
@@ -103,20 +103,20 @@ router.post("/login", (req, res) => {
 
   let user = null;
   if (parsed.email) {
-    user = db.prepare(`SELECT * FROM users WHERE email = ?`).get(parsed.email);
+    user = await sqlGet(`SELECT * FROM users WHERE email = ?`, [parsed.email]);
   } else {
-    user = db.prepare(`SELECT * FROM users WHERE phone = ?`).get(parsed.phone);
+    user = await sqlGet(`SELECT * FROM users WHERE phone = ?`, [parsed.phone]);
   }
 
   if (!user || !bcrypt.compareSync(password || "", user.password_hash)) {
-    recordLoginAttempt(key);
+    await recordLoginAttempt(key);
     return res.status(401).json({ error: "Неверный логин или пароль." });
   }
   if (user.status === "blocked") {
     return res.status(403).json({ error: "Аккаунт заблокирован." });
   }
 
-  clearLoginAttempts(key);
+  await clearLoginAttempts(key);
   setUserSession(req, user);
   res.json({ user: publicUser(user) });
 });
@@ -124,16 +124,16 @@ router.post("/login", (req, res) => {
 router.post("/logout", requireAuth, (req, res) => {
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ error: "Не удалось выйти." });
-    res.clearCookie("connect.sid");
+    res.clearCookie(SESSION_COOKIE);
     res.json({ ok: true });
   });
 });
 
-router.get("/me", (req, res) => {
+router.get("/me", async (req, res) => {
   if (!req.session?.userId) {
     return res.json({ user: null });
   }
-  const user = db.prepare(`SELECT * FROM users WHERE id = ?`).get(req.session.userId);
+  const user = await sqlGet(`SELECT * FROM users WHERE id = ?`, [req.session.userId]);
   if (!user) {
     req.session.destroy(() => {});
     return res.json({ user: null });
@@ -142,15 +142,15 @@ router.get("/me", (req, res) => {
   res.json({ user: publicUser(user) });
 });
 
-router.post("/forgot-password", (req, res) => {
+router.post("/forgot-password", async (req, res) => {
   const parsed = parseLoginIdentifier(req.body?.identifier);
   if (parsed.error) return res.status(400).json({ error: parsed.error });
 
   let user = null;
   if (parsed.email) {
-    user = db.prepare(`SELECT * FROM users WHERE email = ?`).get(parsed.email);
+    user = await sqlGet(`SELECT * FROM users WHERE email = ?`, [parsed.email]);
   } else {
-    user = db.prepare(`SELECT * FROM users WHERE phone = ?`).get(parsed.phone);
+    user = await sqlGet(`SELECT * FROM users WHERE phone = ?`, [parsed.phone]);
   }
 
   const generic = {
@@ -160,17 +160,19 @@ router.post("/forgot-password", (req, res) => {
 
   if (!user) return res.json(generic);
 
-  db.prepare(
+  await sqlRun(
     `UPDATE password_reset_tokens SET used_at = datetime('now')
      WHERE user_id = ? AND used_at IS NULL`,
-  ).run(user.id);
+    [user.id],
+  );
 
   const token = nanoid(48);
   const token_hash = hashToken(token);
-  db.prepare(
+  await sqlRun(
     `INSERT INTO password_reset_tokens (user_id, token_hash, expires_at)
      VALUES (?, ?, datetime('now', '+1 hour'))`,
-  ).run(user.id, token_hash);
+    [user.id, token_hash],
+  );
 
   const base = process.env.LMS_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
   const resetUrl = `${base}/portal/reset-password.html?token=${token}`;
@@ -181,34 +183,34 @@ router.post("/forgot-password", (req, res) => {
   res.json(generic);
 });
 
-router.post("/reset-password", (req, res) => {
+router.post("/reset-password", async (req, res) => {
   const { token, password } = req.body || {};
   if (!token) return res.status(400).json({ error: "Недействительная ссылка сброса." });
   const passErr = validatePassword(password);
   if (passErr) return res.status(400).json({ error: passErr });
 
   const token_hash = hashToken(token);
-  const row = db
-    .prepare(
-      `SELECT * FROM password_reset_tokens
-       WHERE token_hash = ? AND used_at IS NULL AND expires_at > datetime('now')`,
-    )
-    .get(token_hash);
+  const row = await sqlGet(
+    `SELECT * FROM password_reset_tokens
+     WHERE token_hash = ? AND used_at IS NULL AND expires_at > datetime('now')`,
+    [token_hash],
+  );
 
   if (!row) {
     return res.status(400).json({ error: "Ссылка устарела или уже использована." });
   }
 
   const password_hash = bcrypt.hashSync(password, 12);
-  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(
+  await sqlRun(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`, [
     password_hash,
     row.user_id,
-  );
-  db.prepare(`UPDATE password_reset_tokens SET used_at = datetime('now') WHERE id = ?`).run(row.id);
-  db.prepare(
+  ]);
+  await sqlRun(`UPDATE password_reset_tokens SET used_at = datetime('now') WHERE id = ?`, [row.id]);
+  await sqlRun(
     `UPDATE password_reset_tokens SET used_at = datetime('now')
      WHERE user_id = ? AND used_at IS NULL`,
-  ).run(row.user_id);
+    [row.user_id],
+  );
 
   res.json({ message: "Пароль успешно изменён. Теперь можно войти." });
 });

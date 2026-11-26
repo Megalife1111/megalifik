@@ -1,10 +1,7 @@
-import { db } from "../db.js";
+import { sqlGet, sqlAll } from "../db.js";
 
-export function getCourseAccessState(userId, course) {
+export async function getCourseAccessState(userId, course) {
   if (!userId) {
-    if (course.access_mode === "open") {
-      return { canView: false, status: "login_required", canRequest: false };
-    }
     return { canView: false, status: "login_required", canRequest: false };
   }
 
@@ -16,11 +13,10 @@ export function getCourseAccessState(userId, course) {
     return { canView: false, status: "blocked", canRequest: false };
   }
 
-  const row = db
-    .prepare(
-      `SELECT status, admin_comment FROM course_access WHERE user_id = ? AND course_id = ?`,
-    )
-    .get(userId, course.id);
+  const row = await sqlGet(
+    `SELECT status, admin_comment FROM course_access WHERE user_id = ? AND course_id = ?`,
+    [userId, course.id],
+  );
 
   if (course.access_mode === "selected") {
     if (row?.status === "granted") {
@@ -53,15 +49,14 @@ export function getCourseAccessState(userId, course) {
   return { canView: false, status: "unknown", canRequest: false };
 }
 
-export function userCanAccessMaterial(userId, materialId) {
-  const material = db
-    .prepare(
-      `SELECT m.*, c.access_mode, c.id AS course_id
-       FROM materials m
-       JOIN courses c ON c.id = m.course_id
-       WHERE m.id = ? AND m.is_active = 1 AND c.is_active = 1`,
-    )
-    .get(materialId);
+export async function userCanAccessMaterial(userId, materialId) {
+  const material = await sqlGet(
+    `SELECT m.*, c.access_mode, c.id AS course_id
+     FROM materials m
+     JOIN courses c ON c.id = m.course_id
+     WHERE m.id = ? AND m.is_active = 1 AND c.is_active = 1`,
+    [materialId],
+  );
 
   if (!material) return { allowed: false, reason: "not_found" };
 
@@ -69,21 +64,20 @@ export function userCanAccessMaterial(userId, materialId) {
     id: material.course_id,
     access_mode: material.access_mode,
   };
-  const access = getCourseAccessState(userId, course);
+  const access = await getCourseAccessState(userId, course);
   if (!access.canView) {
     return { allowed: false, reason: "no_course_access", material };
   }
 
-  const prevRequired = db
-    .prepare(
-      `SELECT m.id FROM materials m
-       LEFT JOIN material_progress p ON p.material_id = m.id AND p.user_id = ?
-       WHERE m.course_id = ? AND m.is_active = 1 AND m.is_required = 1
-         AND m.sort_order < ?
-         AND COALESCE(p.status, 'not_started') != 'completed'
-       ORDER BY m.sort_order ASC LIMIT 1`,
-    )
-    .get(userId, material.course_id, material.sort_order);
+  const prevRequired = await sqlGet(
+    `SELECT m.id FROM materials m
+     LEFT JOIN material_progress p ON p.material_id = m.id AND p.user_id = ?
+     WHERE m.course_id = ? AND m.is_active = 1 AND m.is_required = 1
+       AND m.sort_order < ?
+       AND COALESCE(p.status, 'not_started') != 'completed'
+     ORDER BY m.sort_order ASC LIMIT 1`,
+    [userId, material.course_id, material.sort_order],
+  );
 
   if (prevRequired) {
     return { allowed: false, reason: "sequential_lock", material, blockedBy: prevRequired.id };
@@ -92,32 +86,30 @@ export function userCanAccessMaterial(userId, materialId) {
   return { allowed: true, material };
 }
 
-export function computeCourseProgress(userId, courseId) {
-  const courseRow = db
-    .prepare(`SELECT access_mode FROM courses WHERE id = ?`)
-    .get(courseId);
+export async function computeCourseProgress(userId, courseId) {
+  const courseRow = await sqlGet(`SELECT access_mode FROM courses WHERE id = ?`, [courseId]);
   if (!courseRow) return null;
 
-  const total = db
-    .prepare(
-      `SELECT COUNT(*) AS c FROM materials WHERE course_id = ? AND is_active = 1`,
-    )
-    .get(courseId).c;
+  const totalRow = await sqlGet(
+    `SELECT COUNT(*) AS c FROM materials WHERE course_id = ? AND is_active = 1`,
+    [courseId],
+  );
+  const total = totalRow?.c ?? 0;
 
   const course = { id: courseId, access_mode: courseRow.access_mode };
-  const state = getCourseAccessState(userId, course);
+  const state = await getCourseAccessState(userId, course);
   if (!state.canView) {
     return { percent: 0, completed: 0, total, accessible: false };
   }
 
-  const completed = db
-    .prepare(
-      `SELECT COUNT(*) AS c
-       FROM material_progress p
-       JOIN materials m ON m.id = p.material_id
-       WHERE p.user_id = ? AND m.course_id = ? AND m.is_active = 1 AND p.status = 'completed'`,
-    )
-    .get(userId, courseId).c;
+  const completedRow = await sqlGet(
+    `SELECT COUNT(*) AS c
+     FROM material_progress p
+     JOIN materials m ON m.id = p.material_id
+     WHERE p.user_id = ? AND m.course_id = ? AND m.is_active = 1 AND p.status = 'completed'`,
+    [userId, courseId],
+  );
+  const completed = completedRow?.c ?? 0;
 
   const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
   return { percent, completed, total, accessible: true };
