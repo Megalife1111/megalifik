@@ -1,4 +1,4 @@
-import { db } from "./db.js";
+import { sqlExec, sqlAll, initDb } from "./db.js";
 
 const migrations = `
 CREATE TABLE IF NOT EXISTS users (
@@ -89,11 +89,17 @@ CREATE INDEX IF NOT EXISTS idx_course_access_user ON course_access(user_id);
 CREATE INDEX IF NOT EXISTS idx_login_attempts_id ON login_attempts(identifier, attempted_at);
 `;
 
-db.exec(migrations);
-
-const courseCols = db.prepare(`PRAGMA table_info(courses)`).all();
-if (!courseCols.some((c) => c.name === "cover_image")) {
-  db.exec(`ALTER TABLE courses ADD COLUMN cover_image TEXT`);
+async function main() {
+  await initDb();
+  await sqlExec(migrations);
+  const courseCols = await sqlAll(`PRAGMA table_info(courses)`);
+  if (!courseCols.some((c) => c.name === "cover_image")) {
+    await sqlExec(`ALTER TABLE courses ADD COLUMN cover_image TEXT`);
+  }
+  console.log("Migrations applied.");
 }
 
-console.log("Migrations applied.");
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

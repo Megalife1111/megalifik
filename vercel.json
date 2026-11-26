@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm install",
+  "buildCommand": "npm run vercel-build",
+  "rewrites": [
+    { "source": "/send_test.php", "destination": "/api" },
+    { "source": "/send_homework.php", "destination": "/api" },
+    { "source": "/send_reading.php", "destination": "/api" },
+    { "source": "/send_emotional.php", "destination": "/api" },
+    { "source": "/send_trainer.php", "destination": "/api" },
+    { "source": "/send_conformity.php", "destination": "/api" },
+    { "source": "/send_memory.php", "destination": "/api" },
+    { "source": "/api", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api" }
+  ],
+  "functions": {
+    "api/index.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  }
+}

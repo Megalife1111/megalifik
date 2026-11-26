@@ -1,0 +1,12 @@
+{
+  "name": "megalifik",
+  "private": true,
+  "type": "module",
+  "workspaces": ["server"],
+  "scripts": {
+    "start": "npm start -w megalife-lms-server",
+    "migrate": "npm run migrate -w megalife-lms-server",
+    "seed": "npm run seed -w megalife-lms-server",
+    "vercel-build": "npm run vercel-build -w megalife-lms-server"
+  }
+}

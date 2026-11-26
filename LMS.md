@@ -2,6 +2,9 @@
 
 Репозиторий: **https://github.com/Megalife1111/megalifik**
 
+**Деплой на Vercel:** см. [deploy/VERCEL.md](./deploy/VERCEL.md) (Turso + env).  
+**Деплой на VPS:** см. [deploy/WHAT_TO_PROVIDE.md](./deploy/WHAT_TO_PROVIDE.md).
+
 Платформа обучения поверх существующих HTML-материалов.
 
 ## Запуск на своём компьютере
