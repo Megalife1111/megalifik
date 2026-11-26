@@ -9,15 +9,14 @@ function run(script) {
 }
 
 function main() {
-  if (process.env.VERCEL && !process.env.TURSO_DATABASE_URL) {
-    console.error(`
-[Vercel build] TURSO_DATABASE_URL не задан.
-Добавьте в Vercel → Project → Settings → Environment Variables:
-  TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, SESSION_SECRET,
-  LMS_ADMIN_EMAIL, LMS_ADMIN_PASSWORD
-См. deploy/VERCEL.md
+  if (!process.env.TURSO_DATABASE_URL) {
+    console.warn(`
+[Vercel build] TURSO_DATABASE_URL не задан — migrate/seed пропущены.
+Чтобы БД инициализировалась при сборке, в Vercel → Settings → Environment Variables
+отметьте переменные Turso и админа для среды **Build** (не только Production).
+После добавления — Redeploy. См. deploy/VERCEL.md
 `);
-    process.exit(1);
+    return;
   }
 
   run("src/migrate.js");

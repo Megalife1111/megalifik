@@ -9,7 +9,7 @@
 Локальный SQLite на Vercel **не сохраняется**. Нужен **Turso** (совместим с SQLite):
 
 1. [turso.tech](https://turso.tech) → создать БД  
-2. В Vercel → Project → **Settings → Environment Variables** (для **Production**, **Preview** и **Build**):
+2. В Vercel → Project → **Settings → Environment Variables** — для каждой переменной включите **Production**, **Preview** и **Build** (без **Build** деплой падает или БД не инициализируется):
 
 | Переменная | Значение |
 |------------|----------|
