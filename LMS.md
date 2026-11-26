@@ -22,7 +22,7 @@ chmod +x start-lms.sh   # Linux / macOS, один раз
 
 ```bash
 cd server
-npm install
+npm install --include=dev
 npm run migrate
 npm run seed
 npm start
