@@ -3,18 +3,16 @@
   "installCommand": "npm install",
   "buildCommand": "npm run vercel-build",
   "rewrites": [
-    { "source": "/send_test.php", "destination": "/api" },
-    { "source": "/send_homework.php", "destination": "/api" },
-    { "source": "/send_reading.php", "destination": "/api" },
-    { "source": "/send_emotional.php", "destination": "/api" },
-    { "source": "/send_trainer.php", "destination": "/api" },
-    { "source": "/send_conformity.php", "destination": "/api" },
-    { "source": "/send_memory.php", "destination": "/api" },
-    { "source": "/api", "destination": "/api" },
-    { "source": "/api/(.*)", "destination": "/api" }
+    { "source": "/send_test.php", "destination": "/api/telegram/test" },
+    { "source": "/send_homework.php", "destination": "/api/telegram/homework" },
+    { "source": "/send_reading.php", "destination": "/api/telegram/reading" },
+    { "source": "/send_emotional.php", "destination": "/api/telegram/emotional" },
+    { "source": "/send_trainer.php", "destination": "/api/telegram/trainer" },
+    { "source": "/send_conformity.php", "destination": "/api/telegram/conformity" },
+    { "source": "/send_memory.php", "destination": "/api/telegram/memory" }
   ],
   "functions": {
-    "api/index.js": {
+    "api/**.js": {
       "memory": 1024,
       "maxDuration": 30
     }
