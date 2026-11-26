@@ -1,4 +1,12 @@
 import { execSync } from "node:child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const serverRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+function run(script) {
+  execSync(`node ${script}`, { stdio: "inherit", cwd: serverRoot });
+}
 
 function main() {
   if (process.env.VERCEL && !process.env.TURSO_DATABASE_URL) {
@@ -12,8 +20,8 @@ function main() {
     process.exit(1);
   }
 
-  execSync("node src/migrate.js", { stdio: "inherit" });
-  execSync("node src/seed.js", { stdio: "inherit" });
+  run("src/migrate.js");
+  run("src/seed.js");
 }
 
 main();
