@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "migrate": "node src/migrate.js",
     "seed": "node src/seed.js",
-    "vercel-build": "node src/migrate.js && node src/seed.js"
+    "vercel-build": "node src/vercel-build.js"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",

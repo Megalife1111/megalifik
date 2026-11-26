@@ -7,7 +7,7 @@
 Локальный SQLite на Vercel **не сохраняется**. Нужен **Turso** (совместим с SQLite):
 
 1. [turso.tech](https://turso.tech) → создать БД  
-2. В Vercel → Project → **Settings → Environment Variables**:
+2. В Vercel → Project → **Settings → Environment Variables** (для **Production**, **Preview** и **Build**):
 
 | Переменная | Значение |
 |------------|----------|
@@ -15,10 +15,11 @@
 | `TURSO_AUTH_TOKEN` | токен Turso |
 | `SESSION_SECRET` | длинная случайная строка |
 | `NODE_ENV` | `production` |
-| `LMS_PUBLIC_URL` | `https://ваш-домен.vercel.app` |
 | `LMS_ADMIN_EMAIL` | email админа |
-| `LMS_ADMIN_PASSWORD` | пароль (при первом build сработает seed) |
+| `LMS_ADMIN_PASSWORD` | пароль (при build сработает seed) |
 | `TELEGRAM_BOT_TOKEN` | от @BotFather |
+
+`LMS_PUBLIC_URL` можно не задавать: на Vercel подставится `https://$VERCEL_URL` автоматически. Для своего домена укажите `https://ваш-домен.ru`.
 
 Опционально:
 

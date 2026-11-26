@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
-import connectSqlite3 from "connect-sqlite3";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -19,6 +18,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, "..", "..");
 const isVercel = Boolean(process.env.VERCEL);
 
+if (!process.env.LMS_PUBLIC_URL && process.env.VERCEL_URL) {
+  process.env.LMS_PUBLIC_URL = `https://${process.env.VERCEL_URL}`;
+}
+
 const app = express();
 
 app.set("trust proxy", 1);
@@ -27,16 +30,16 @@ app.use(cookieParser());
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
-function buildSessionStore() {
-  if (useRemoteDb()) {
-    return new LibsqlSessionStore();
-  }
-  const SQLiteStore = connectSqlite3(session);
-  return new SQLiteStore({ dir: dataDir, db: "sessions.sqlite" });
-}
+const sessionStore = useRemoteDb()
+  ? new LibsqlSessionStore()
+  : await (async () => {
+      const connectSqlite3 = (await import("connect-sqlite3")).default;
+      const SQLiteStore = connectSqlite3(session);
+      return new SQLiteStore({ dir: dataDir, db: "sessions.sqlite" });
+    })();
 
 const sessionMiddleware = session({
-  store: buildSessionStore(),
+  store: sessionStore,
   secret: process.env.SESSION_SECRET || "megalife-dev-secret-change-me",
   resave: false,
   saveUninitialized: false,
