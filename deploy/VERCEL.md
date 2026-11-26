@@ -34,6 +34,7 @@
 
 1. [vercel.com/new](https://vercel.com/new) → Import **Megalife1111/megalifik**
 2. Framework: **Other** (используется `vercel.json`)
+   - **Output Directory** — **пусто** или `.` (не `public`: сайт в корне репо, см. `outputDirectory` в `vercel.json`)
 3. Добавить переменные окружения (Turso, секреты)
 4. **Settings → Git**: репозиторий `Megalife1111/megalifik`, ветка **Production = main**
 5. **Settings → General → Root Directory** — пусто (корень репо, не `server/`)
