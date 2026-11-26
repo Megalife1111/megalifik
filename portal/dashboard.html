@@ -17,6 +17,7 @@
       import { api } from "/js/lms/api.js";
       import { getOptionalUser, renderTopbar, wireLogout } from "/js/lms/shell.js";
       import { renderCourseTile } from "/js/lms/course-ui.js";
+      import { mountWelcomeOnDashboard } from "/js/lms/welcome-modal.js";
 
       const user = await getOptionalUser();
       const { courses } = await api("/api/courses");
@@ -44,6 +45,8 @@
         </div>
         ${grid}`;
       if (user) wireLogout();
+
+      mountWelcomeOnDashboard(Boolean(user));
 
       document.querySelectorAll("[data-request]").forEach((btn) => {
         btn.addEventListener("click", async () => {

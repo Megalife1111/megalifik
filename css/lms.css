@@ -991,3 +991,132 @@
     flex: 1 1 100%;
   }
 }
+
+/* ——— Welcome video popup (vertical Shorts) ——— */
+
+body.lms-welcome-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+.lms-welcome-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom));
+  background: rgba(26, 11, 46, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: lms-welcome-fade 0.25s ease;
+}
+
+@keyframes lms-welcome-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.lms-welcome-sheet {
+  position: relative;
+  width: min(100%, 380px);
+  max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 16px 16px;
+  border-radius: var(--lms-radius-md);
+  background: var(--lms-surface);
+  box-shadow: var(--lms-shadow);
+  text-align: center;
+}
+
+.lms-welcome-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--lms-primary-soft);
+  color: var(--lms-primary-deep);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.lms-welcome-title {
+  margin: 0 36px 6px 0;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.lms-welcome-lead {
+  margin: 0 0 14px;
+  color: var(--lms-muted);
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.lms-welcome-video {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto 16px;
+  aspect-ratio: 9 / 16;
+  max-height: min(52vh, 520px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.lms-welcome-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.lms-welcome-continue {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+  .lms-welcome-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .lms-welcome-sheet {
+    width: 100%;
+    max-width: none;
+    max-height: min(94dvh, 100%);
+    border-radius: var(--lms-radius-md) var(--lms-radius-md) 0 0;
+    padding: 18px 16px max(20px, env(safe-area-inset-bottom));
+  }
+
+  .lms-welcome-video {
+    max-width: min(72vw, 300px);
+    max-height: min(48dvh, 480px);
+  }
+
+  .lms-welcome-title {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .lms-welcome-video {
+    max-width: 85vw;
+  }
+}

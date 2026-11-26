@@ -12,14 +12,22 @@ export function getNextParam() {
   return new URLSearchParams(window.location.search).get("next") || "/portal/dashboard.html";
 }
 
+function dashboardWithWelcome(nextPath) {
+  const target = new URL(nextPath, window.location.origin);
+  if (!target.pathname.startsWith("/portal/dashboard")) {
+    return `/portal/dashboard.html?welcome=1&next=${encodeURIComponent(nextPath)}`;
+  }
+  target.searchParams.set("welcome", "1");
+  return `${target.pathname}${target.search}`;
+}
+
 export function afterAuthRedirect() {
-  const next = getNextParam();
-  window.location.href = `/portal/welcome.html?next=${encodeURIComponent(next)}`;
+  window.location.href = dashboardWithWelcome(getNextParam());
 }
 
 export async function redirectIfAuthed() {
   const { user } = await api("/api/auth/me");
-  if (user) afterAuthRedirect();
+  if (user) window.location.href = dashboardWithWelcome(getNextParam());
   return user;
 }
 

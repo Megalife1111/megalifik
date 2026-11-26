@@ -2,56 +2,17 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="0;url=/portal/dashboard.html?welcome=1" />
     <title>Добро пожаловать — MegaLife</title>
-    <link rel="stylesheet" href="/css/lms.css" />
-    <style>
-      .lms-video-wrap {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%;
-        height: 0;
-        overflow: hidden;
-        border-radius: 12px;
-        background: #000;
-      }
-      .lms-video-wrap iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-      }
-    </style>
-  </head>
-  <body class="lms-page">
-    <main class="lms-shell">
-      <div class="lms-card" style="max-width: 720px; margin: 0 auto">
-        <h1 class="lms-title">Добро пожаловать в MegaLife</h1>
-        <p class="lms-subtitle">Короткое видео о том, как устроено обучение</p>
-        <div class="lms-video-wrap">
-          <iframe
-            src="https://www.youtube.com/embed/6jZ9cG_xfcw"
-            title="Приветственное видео MegaLife"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            referrerpolicy="strict-origin-when-cross-origin"
-          ></iframe>
-        </div>
-        <p style="margin-top: 20px; color: var(--lms-muted)">
-          После просмотра перейдите в каталог курсов — все открытые разделы доступны сразу.
-        </p>
-        <a class="lms-btn lms-btn-primary lms-btn-block" id="continue-btn" href="/portal/dashboard.html">Продолжить</a>
-      </div>
-    </main>
-    <script type="module">
-      import { requireUser } from "/js/lms/shell.js";
-      const user = await requireUser();
-      if (!user) throw new Error("unauth");
-      const next = new URLSearchParams(location.search).get("next") || "/portal/dashboard.html";
-      const btn = document.getElementById("continue-btn");
-      btn.href = next;
+    <script>
+      const next = new URLSearchParams(location.search).get("next");
+      const dest = next
+        ? `/portal/dashboard.html?welcome=1&next=${encodeURIComponent(next)}`
+        : "/portal/dashboard.html?welcome=1";
+      location.replace(dest);
     </script>
+  </head>
+  <body>
+    <p><a href="/portal/dashboard.html?welcome=1">Перейти к курсам</a></p>
   </body>
 </html>

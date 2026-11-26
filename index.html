@@ -7,7 +7,7 @@
     <script type="module">
       try {
         const { user } = await fetch("/api/auth/me", { credentials: "include" }).then((r) => r.json());
-        location.replace(user ? "/portal/welcome.html" : "/portal/login.html");
+        location.replace(user ? "/portal/dashboard.html?welcome=1" : "/portal/login.html");
       } catch {
         location.replace("/portal/login.html");
       }

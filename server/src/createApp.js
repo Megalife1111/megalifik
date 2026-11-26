@@ -128,7 +128,7 @@ app.get("/api/legacy/material-by-path", async (req, res) => {
 
 app.get("/", (req, res) => {
   if (req.session?.userId) {
-    return res.redirect("/portal/welcome.html");
+    return res.redirect("/portal/dashboard.html?welcome=1");
   }
   return res.redirect("/portal/login.html");
 });
