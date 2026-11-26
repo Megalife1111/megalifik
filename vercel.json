@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install --omit=dev",
+  "installCommand": "npm ci --omit=dev",
   "buildCommand": "npm run vercel-build",
   "rewrites": [
     { "source": "/send_test.php", "destination": "/api/telegram/test" },

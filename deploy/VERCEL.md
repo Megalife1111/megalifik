@@ -33,7 +33,10 @@
 1. [vercel.com/new](https://vercel.com/new) → Import **Megalife1111/megalifik**
 2. Framework: **Other** (используется `vercel.json`)
 3. Добавить переменные окружения (Turso, секреты)
-4. Deploy
+4. **Settings → Git**: репозиторий `Megalife1111/megalifik`, ветка **Production = main**
+5. Deploy
+
+Если сайт показывает `DEPLOYMENT_NOT_FOUND` — в **Deployments** сделайте **Redeploy** или заново **Import** репозитория.
 
 ## 3. Локальная разработка (как раньше)
 

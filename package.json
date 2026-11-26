@@ -2,14 +2,27 @@
   "name": "megalifik",
   "private": true,
   "type": "module",
-  "workspaces": ["server"],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "start": "npm start -w megalife-lms-server",
-    "migrate": "npm run migrate -w megalife-lms-server",
-    "seed": "npm run seed -w megalife-lms-server",
-    "vercel-build": "npm run vercel-build -w megalife-lms-server"
+    "start": "node server/src/index.js",
+    "migrate": "node server/src/migrate.js",
+    "seed": "node server/src/seed.js",
+    "vercel-build": "node server/src/vercel-build.js"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "nanoid": "^5.0.9"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^11.7.0",
+    "connect-sqlite3": "^0.9.15"
   }
 }

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$(dirname "$0")/server"
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT"
 if [[ ! -d node_modules ]]; then
   npm install
 fi
