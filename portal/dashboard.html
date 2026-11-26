@@ -47,23 +47,6 @@
       if (user) wireLogout();
 
       mountWelcomeOnDashboard(Boolean(user));
-
-      document.querySelectorAll("[data-request]").forEach((btn) => {
-        btn.addEventListener("click", async () => {
-          if (!user) {
-            window.location.href = `/portal/login.html?next=${encodeURIComponent(location.pathname)}`;
-            return;
-          }
-          btn.disabled = true;
-          try {
-            await api(`/api/courses/${btn.dataset.request}/request-access`, { method: "POST", body: {} });
-            location.reload();
-          } catch (e) {
-            alert(e.message);
-            btn.disabled = false;
-          }
-        });
-      });
     </script>
   </body>
 </html>
