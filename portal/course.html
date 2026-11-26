@@ -46,7 +46,7 @@
 
       const bannerSrc = courseBanner(data.course);
       const hero = bannerSrc.includes("lms-banners")
-        ? `<div class="lms-banner-card__frame lms-course-hero"><img src="${bannerSrc}" alt="" loading="lazy" /></div>`
+        ? `<div class="lms-course-hero"><img src="${bannerSrc}" alt="" loading="lazy" /></div>`
         : "";
 
       document.getElementById("app").innerHTML = `
