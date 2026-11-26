@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "workspaces": ["server"],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "npm start -w megalife-lms-server",
     "migrate": "npm run migrate -w megalife-lms-server",

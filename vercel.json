@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install",
+  "installCommand": "npm install --omit=dev",
   "buildCommand": "npm run vercel-build",
   "rewrites": [
     { "source": "/send_test.php", "destination": "/api/telegram/test" },
@@ -12,7 +12,7 @@
     { "source": "/send_memory.php", "destination": "/api/telegram/memory" }
   ],
   "functions": {
-    "api/**.js": {
+    "api/**/*.js": {
       "memory": 1024,
       "maxDuration": 30
     }
