@@ -36,7 +36,10 @@
 2. Framework: **Other** (используется `vercel.json`)
 3. Добавить переменные окружения (Turso, секреты)
 4. **Settings → Git**: репозиторий `Megalife1111/megalifik`, ветка **Production = main**
-5. Deploy
+5. **Settings → General → Root Directory** — пусто (корень репо, не `server/`)
+6. **Settings → Deployment Protection** — для проверки отключите защиту preview или тестируйте только **Production** (`megalifik1111.vercel.app`)
+7. После первого успешного деплоя: **Deployments → … → Redeploy** с **Build Command** `npm run vercel-build` (migrate/seed), если Turso включён для **Build**
+8. Deploy
 
 Если сайт показывает `DEPLOYMENT_NOT_FOUND` — в **Deployments** сделайте **Redeploy** или заново **Import** репозитория.
 
