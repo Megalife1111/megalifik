@@ -30,24 +30,7 @@ app.use(cookieParser());
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
-let sessionStore;
-if (isVercel || useRemoteDb()) {
-  if (!process.env.TURSO_DATABASE_URL) {
-    throw new Error(
-      "На Vercel нужны TURSO_DATABASE_URL и TURSO_AUTH_TOKEN (Settings → Environment Variables).",
-    );
-  }
-  sessionStore = new LibsqlSessionStore();
-} else {
-  sessionStore = await (async () => {
-    const connectSqlite3 = (await import("connect-sqlite3")).default;
-    const SQLiteStore = connectSqlite3(session);
-    return new SQLiteStore({ dir: dataDir, db: "sessions.sqlite" });
-  })();
-}
-
-const sessionMiddleware = session({
-  store: sessionStore,
+const sessionOptions = {
   secret: process.env.SESSION_SECRET || "megalife-dev-secret-change-me",
   resave: false,
   saveUninitialized: false,
@@ -58,9 +41,32 @@ const sessionMiddleware = session({
     secure: process.env.NODE_ENV === "production",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   },
-});
+};
 
-app.use(sessionMiddleware);
+let sessionMiddleware;
+async function resolveSessionStore() {
+  if (isVercel || useRemoteDb()) {
+    if (!process.env.TURSO_DATABASE_URL) {
+      throw new Error(
+        "На Vercel нужны TURSO_DATABASE_URL и TURSO_AUTH_TOKEN (Settings → Environment Variables).",
+      );
+    }
+    return new LibsqlSessionStore();
+  }
+  const connectSqlite3 = (await import("connect-sqlite3")).default;
+  const SQLiteStore = connectSqlite3(session);
+  return new SQLiteStore({ dir: dataDir, db: "sessions.sqlite" });
+}
+
+app.use((req, res, next) => {
+  if (sessionMiddleware) return sessionMiddleware(req, res, next);
+  resolveSessionStore()
+    .then((store) => {
+      sessionMiddleware = session({ ...sessionOptions, store });
+      sessionMiddleware(req, res, next);
+    })
+    .catch(next);
+});
 app.use(attachSessionUser);
 
 function csrfGuard(req, res, next) {
